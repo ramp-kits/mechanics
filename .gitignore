@@ -16,5 +16,7 @@ build/
 dist/
 
 .nfs*
-
+*.dat
 *starting_kit.html
+*~
+run.sh

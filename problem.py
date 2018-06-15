@@ -7,9 +7,9 @@ problem_title =\
     'Prediction of the azimuth of Mars'
 
 _n_lookahead = 5
-_n_burn_in = 8
+_n_burn_in = 1000
 _n_test = 10
-_filename = 'test_angles_array.csv'
+_filename = 'test_angles_perfect_circle_nview10.csv'
 _target = 'phi'
 # Need better error messages for invalid input parameters
 
