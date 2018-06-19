@@ -1,4 +1,5 @@
 import numpy as np
+_n_burn_in = 200
 
 
 class FeatureExtractor(object):
@@ -7,10 +8,10 @@ class FeatureExtractor(object):
         pass
 
     def transform(self, X_ds):
-        self.n_sample = 3
         X_array = X_ds['phi'].values.reshape(-1, 1)
         X_ts = np.ndarray(shape=(len(X_array), 0))
-        for shift in np.arange(self.n_sample):
+        for shift in np.arange(_n_burn_in):
+            print("Preparing series: ", shift)
             X_ts = np.concatenate((X_ts,
                                    np.roll(X_array, X_ds.n_burn_in - shift)),
                                   axis=1)

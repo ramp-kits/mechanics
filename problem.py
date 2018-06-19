@@ -6,10 +6,10 @@ import xarray as xr
 problem_title =\
     'Prediction of the azimuth of Mars'
 
-_n_lookahead = 5
-_n_burn_in = 1000
-_n_test = 10
-_filename = 'test_angles_perfect_circle_nview10.csv'
+_n_lookahead = 50
+_n_burn_in = 200
+_n_test = 1
+_filename = 'test_angles_perfect_circle_nview10_n1M.csv'
 _target = 'phi'
 # Need better error messages for invalid input parameters
 
@@ -26,14 +26,14 @@ score_types = [
 
 # CV implemented here:
 cv = rw.cvs.TimeSeries(
-    n_cv=2, cv_block_size=0.2, period=1, unit='space_year')
+    n_cv=2, cv_block_size=0.5, period=1, unit='space_year')
 get_cv = cv.get_cv
 
 
 # Both train and test targets are stripped off the first
 # n_burn_in entries
 def _read_data(path):
-    data_df = pd.read_csv(os.path.join(path, 'data', _filename))
+    data_df = pd.read_csv(os.path.join(path, 'data', _filename)).loc[:10000:10]
     data_array = data_df.drop(
         ['time'], axis=1).values[_n_lookahead:].reshape(-1)
 
