@@ -2,7 +2,7 @@ from sklearn.base import BaseEstimator
 from scipy.optimize import minimize
 
 import numpy as np
-_n_lookahead = 50
+_n_lookahead = 5
 _n_burn_in = 200
 
 
@@ -54,11 +54,12 @@ def find_local_extrema(x):
         p_prev = np.append(p, p_prev[:n])
         d_prev = np.append(d, d_prev[:n])
         c_prev = np.append(c, c_prev[:n])
-    print(loops)
+#    print(loops)
     return maxima, minima, loops
 
 
 def fit_features(x):
+    "Fitting features..."
     a = np.array([1., 1.])
     w = np.array([1., 1.])
     p = np.array([1., 1.])
@@ -96,6 +97,7 @@ def fit_features(x):
 class Regressor(BaseEstimator):
     def __init__(self):
         self.c = np.array([51, 0.02, 3., 99, 0.01, 0.01])
+        self.really_fit = True
         pass
 
     def epicycle_error(self, c):
@@ -116,7 +118,7 @@ class Regressor(BaseEstimator):
 
     def fit(self, X, y):
         print("Fitting the series, shape : ", X.shape)
-        print(X)
+#        print(X)
         # Maybe this will be where the mechanics will be determined
         # Formulas, main parameters etc.
 
@@ -124,24 +126,24 @@ class Regressor(BaseEstimator):
 #       self.c = np.ndarray((0, 6))
 #        for i in range(X.shape[0]):
         for i in [0]:
-
             self.y_to_fit = X[i]
             cc = fit_features(self.y_to_fit)
-            c_ind = cc[1:]
-            a_bnds = (0., 2.)
-            w_bnds = (0.001, 0.5)
-            p_bnds = (0., np.pi)
-            bnds = (w_bnds, p_bnds, a_bnds, w_bnds, p_bnds)
-
-            res = minimize(fun=self.epicycle_error_independent,
-                           x0=c_ind,
-                           method='TNC', tol=1e-8,
-                           bounds=bnds,
-                           options={
-                               # 'xtol': 0.001,
-                               # 'eps': 0.02,
-                               'maxiter': 100000})
-            self.c = np.append([1.], res.x)
+            self.c = cc
+            if(self.really_fit):
+                c_ind = cc[1:]
+                a_bnds = (0., 2.)
+                w_bnds = (0.001, 0.5)
+                p_bnds = (0., np.pi)
+                bnds = (w_bnds, p_bnds, a_bnds, w_bnds, p_bnds)
+                res = minimize(fun=self.epicycle_error_independent,
+                               x0=c_ind,
+                               method='TNC', tol=1e-8,
+                               bounds=bnds,
+                               options={
+                                   # 'xtol': 0.001,
+                                   # 'eps': 0.02,
+                                   'maxiter': 100000})
+                self.c = np.append([1.], res.x)
 #            self.c = np.concatenate(self.c, np.append([1.], res.x), axis=1)
 
     def predict(self, X):
@@ -157,19 +159,22 @@ class Regressor(BaseEstimator):
             c_ind = cc[2::3]
             p_bnds = (0., np.pi)
             bnds = (p_bnds, p_bnds)
-            print("c_ind : ", c_ind)
-            res = minimize(fun=self.epicycle_error_phase,
-                           x0=c_ind,
-                           method='TNC', tol=1e-8,
-                           bounds=bnds,
-                           options={
-                               # 'xtol': 0.001,
-                               # 'eps': 0.02,
-                               'maxiter': 10000})
+#            print("c_ind : ", c_ind)
             a, w, p = decode_parameters(self.c)
-            p = res.x
+            aa, ww, pp = decode_parameters(cc)
+            p = pp
+            if(self.really_fit):
+                res = minimize(fun=self.epicycle_error_phase,
+                               x0=c_ind,
+                               method='TNC', tol=1e-8,
+                               bounds=bnds,
+                               options={
+                                   # 'xtol': 0.001,
+                                   # 'eps': 0.02,
+                                   'maxiter': 10000})
+                p = res.x
             y[i] = f_phi(a, w, p, _n_burn_in + _n_lookahead)
-        print(y)
+#        print(y)
         return y.reshape(-1, 1)
 
 
