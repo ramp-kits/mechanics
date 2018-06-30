@@ -7,7 +7,7 @@ import xarray as xr
 problem_title =\
     'Prediction of the azimuth of Mars'
 
-_n_lookahead = 5
+_n_lookahead = 50
 _n_burn_in = 500
 _filename = 'test_angles_perfect_circle_nview10_n1M.csv'
 _target = 'phi'
@@ -25,22 +25,17 @@ score_types = [
 ]
 
 # CV implemented here:
-cv = rw.cvs.TimeSeries(
-    n_cv=2, cv_block_size=0.5, period=1, unit='space_year')
-#get_cv = cv
-
-
 def get_cv(X, y):
     n = len(y)
-    train_is = np.arange(0, n - _n_burn_in - _n_lookahead)
-    test_is = np.arange(0, n - _n_burn_in - _n_lookahead)
+    train_is = np.arange(0, n)
+    test_is = np.arange(0, n)
     yield (train_is, test_is)
 
 
 # Both train and test targets are stripped off the first
 # n_burn_in entries
 def _read_data(path):
-    data_df = pd.read_csv(os.path.join(path, 'data', _filename)).loc[:20000:10]
+    data_df = pd.read_csv(os.path.join(path, 'data', _filename)).loc[::10]
     data_array = data_df.drop(
         ['time'], axis=1).values[0:- _n_burn_in - _n_lookahead:].reshape(-1)
 

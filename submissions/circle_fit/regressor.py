@@ -2,8 +2,8 @@ from sklearn.base import BaseEstimator
 from scipy.optimize import minimize
 
 import numpy as np
-_n_lookahead = 5
-_n_burn_in = 200
+_n_lookahead = 50
+_n_burn_in = 500
 
 
 def f_x(a, w, p, t):
@@ -97,7 +97,7 @@ def fit_features(x):
 class Regressor(BaseEstimator):
     def __init__(self):
         self.c = np.array([51, 0.02, 3., 99, 0.01, 0.01])
-        self.really_fit = True
+        self.really_fit = False 
         pass
 
     def epicycle_error(self, c):

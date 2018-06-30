@@ -4,7 +4,7 @@ from keras.models import Model
 from keras.layers import LSTM
 import numpy as np
 _n_lookahead = 50
-_n_burn_in = 200
+_n_burn_in = 500
 
 
 class Regressor(BaseEstimator):
@@ -12,6 +12,12 @@ class Regressor(BaseEstimator):
         pass
 
     def fit(self, X, y):
+        print("Fitting LSTM...")
+        print(X.shape)
+        print(X)
+        print(y.shape)
+        print(y)
+
         self.n_sample = _n_burn_in
         inputs = Input(shape=(self.n_sample, 1),
                        dtype='float', name='main_input')
