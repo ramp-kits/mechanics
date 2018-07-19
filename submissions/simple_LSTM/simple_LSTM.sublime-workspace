@@ -83,7 +83,8 @@
 			"file": "regressor.py",
 			"settings":
 			{
-				"buffer_size": 971,
+				"buffer_size": 1050,
+				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
@@ -91,7 +92,8 @@
 			"file": "ts_feature_extractor.py",
 			"settings":
 			{
-				"buffer_size": 730,
+				"buffer_size": 1200,
+				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		}
@@ -264,19 +266,34 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 971,
+						"buffer_size": 1050,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
+								1050,
 								0
 							]
 						],
 						"settings":
 						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".",
+									"selector": "source.python - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
 							"syntax": "Packages/Python/Python.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
@@ -294,19 +311,34 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 730,
+						"buffer_size": 1200,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								693,
+								693
 							]
 						],
 						"settings":
 						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".",
+									"selector": "source.python - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
 							"syntax": "Packages/Python/Python.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true

@@ -3,8 +3,6 @@ from keras.layers import Input, Dense
 from keras.models import Model
 from keras.layers import LSTM
 import numpy as np
-_n_lookahead = 50
-_n_burn_in = 500
 
 
 class Regressor(BaseEstimator):
@@ -18,7 +16,7 @@ class Regressor(BaseEstimator):
         print(y.shape)
         print(y)
 
-        self.n_sample = _n_burn_in
+        self.n_sample = X.shape[1]
         inputs = Input(shape=(self.n_sample, 1),
                        dtype='float', name='main_input')
         layer = LSTM(8)(inputs)

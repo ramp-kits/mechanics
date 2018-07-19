@@ -18,24 +18,28 @@ Predictions = rw.prediction_types.make_regression(
     label_names=[_target])
 
 # El Nino, a.k.a. [TimeSeries, FeatureExtractor, Regressor]
-workflow = rw.workflows.Mechanics(check_sizes=[_n_burn_in + 30], check_indexs=[_n_burn_in + 1])
+workflow = rw.workflows.Mechanics(
+    check_sizes=[_n_burn_in + 30], check_indexs=[_n_burn_in + 1])
 
 score_types = [
     rw.score_types.RelativeRMSE(name='rel_rmse', precision=3)
 ]
 
+
 # CV implemented here:
 def get_cv(X, y):
     n = len(y)
-    train_is = np.arange(0, n)
-    test_is = np.arange(0, n)
+#    train_is = np.arange(0, int(n / 2))
+#    test_is = np.arange(int(n / 2), n)
+    train_is = np.arange(0, int(n / 2))
+    test_is = np.arange(0, int(n / 2))
     yield (train_is, test_is)
 
 
 # Both train and test targets are stripped off the first
 # n_burn_in entries
-def _read_data(path):
-    data_df = pd.read_csv(os.path.join(path, 'data', _filename)).loc[::10]
+def _read_data(path, filename):
+    data_df = pd.read_csv(os.path.join(path, 'data', filename)).loc[::1]
     data_array = data_df.drop(
         ['time'], axis=1).values[0:- _n_burn_in - _n_lookahead:].reshape(-1)
 
@@ -60,10 +64,14 @@ def _read_data(path):
 
 
 def get_train_data(path='.'):
-    data_ds, y_array = _read_data(path)
+    data_ds, y_array = _read_data(
+        path,
+        "phis_nview_sysFSS0_planet1_nview100_nsim200000.csv")
     return data_ds, y_array
 
 
 def get_test_data(path='.'):
-    data_ds, y_array = _read_data(path)
+    data_ds, y_array = _read_data(
+        path,
+        "phis_nview_sysFSS0_planet2_nview100_nsim200000.csv")
     return data_ds, y_array
