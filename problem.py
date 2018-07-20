@@ -64,14 +64,26 @@ def _read_data(path, filename):
 
 
 def get_train_data(path='.'):
-    data_ds, y_array = _read_data(
-        path,
-        "phis_nview_sysFSS0_planet1_nview100_nsim200000.csv")
-    return data_ds, y_array
+    data_ds_array = np.array([])
+    y_array_array = np.array([])
+    for ds in ["sysFDS5_planet0"]:
+        data_ds, y_array = _read_data(
+            path,
+            "phis_nview_" + ds + "_nview100_nsim200000.csv")
+        data_ds_array = np.append(data_ds_array, data_ds)
+        y_array_array = np.append(y_array_array, y_array)
+#    return data_ds, y_array
+    return data_ds_array, y_array_array
 
 
-def get_test_data(path='.'):
-    data_ds, y_array = _read_data(
-        path,
-        "phis_nview_sysFSS0_planet2_nview100_nsim200000.csv")
-    return data_ds, y_array
+def get_train_data(path='.'):
+    data_ds_array = np.array([])
+    y_array_array = np.array([])
+    for ds in ["sysFSS1_planet0"]:
+        data_ds, y_array = _read_data(
+            path,
+            "phis_nview_" + ds + "_nview100_nsim200000.csv")
+        data_ds_array = np.append(data_ds_array, data_ds)
+        y_array_array = np.append(y_array_array, y_array)
+#    return data_ds, y_array
+    return data_ds_array, y_array_array
