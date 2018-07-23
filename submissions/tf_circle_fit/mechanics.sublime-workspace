@@ -102,10 +102,13 @@
 			}
 		},
 		{
+			"contents": "import os\nimport numpy as np\nimport pandas as pd\nimport rampwf as rw\nimport xarray as xr\n\nproblem_title =\\\n    'Prediction of the azimuth of Mars'\n\n_n_lookahead = 50\n_n_burn_in = 500\n_filename = 'test_angles_perfect_circle_nview10_n1M.csv'\n_target = 'phi'\n# Need better error messages for invalid input parameters\n_debug_time_series = False\n\nPredictions = rw.prediction_types.make_regression(\n    label_names=[_target])\n\n# El Nino, a.k.a. [TimeSeries, FeatureExtractor, Regressor]\nworkflow = rw.workflows.Mechanics(\n    check_sizes=[_n_burn_in + 30], check_indexs=[_n_burn_in + 1])\n\nscore_types = [\n    rw.score_types.RelativeRMSE(name='rel_rmse', precision=3)\n]\n\n\n# CV implemented here:\ndef get_cv(X, y):\n    n = len(y)\n#    train_is = np.arange(0, int(n / 2))\n#    test_is = np.arange(int(n / 2), n)\n    train_is = np.arange(0, int(n / 2))\n    test_is = np.arange(0, int(n / 2))\n    yield (train_is, test_is)\n\n\n# Both train and test targets are stripped off the first\n# n_burn_in entries\ndef _read_data(path, filename):\n    data_df = pd.read_csv(os.path.join(path, 'data', filename)).loc[::1]\n    data_array = data_df.drop(\n        ['time'], axis=1).values[0:- _n_burn_in - _n_lookahead:].reshape(-1)\n\n    # x = y to debug look-up times\n    if(_debug_time_series):\n        data_array = np.arange(0., len(data_array))\n    time = data_df['time'].values[0:- _n_burn_in - _n_lookahead:].reshape(-1)\n    data_xr = xr.DataArray(\n        data_array, coords=[('time', time)], dims=('time'))\n    data_ds = xr.Dataset({'phi': data_xr})\n    data_ds.attrs = {'n_burn_in': _n_burn_in, 'n_lookahead': _n_lookahead}\n\n    y_array = data_df[_target].values.reshape(-1, 1)\n    y_array = y_array[_n_burn_in + _n_lookahead:]\n\n    print(\"y_array : \", y_array.shape, \" : \", y_array)\n    print(\"data_ds : \", data_ds)\n    # x = y to debug look-up times\n    if(_debug_time_series):\n        y_array = np.arange(0., len(data_array)).reshape(-1, 1)\n    return data_ds, y_array\n\n\ndef get_train_data(path='.'):\n    for ds in [\"sysFSS1_planet0\"]:\n\n\n    data_ds, y_array = _read_data(\n        path,\n        \"phis_nview_sysFSS0_planet1_nview100_nsim200000.csv\")\n    return data_ds, y_array\n\n\ndef get_test_data(path='.'):\n    data_ds, y_array = _read_data(\n        path,\n        \"phis_nview_sysFSS0_planet2_nview100_nsim200000.csv\")\n    return data_ds, y_array\n",
 			"file": "/Users/yetkin/ramp/ramp-kits/mechanics/problem.py",
+			"file_size": 2292,
+			"file_write_time": 131765669360000000,
 			"settings":
 			{
-				"buffer_size": 2292,
+				"buffer_size": 2329,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -286,7 +289,7 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -347,7 +350,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 0,
 					"type": "text"
 				},
 				{
@@ -413,15 +416,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2292,
+						"buffer_size": 2329,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1982,
-								1982
+								1983,
+								2018
 							]
 						],
 						"settings":
@@ -450,10 +453,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 515.0,
+						"translation.y": 506.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
