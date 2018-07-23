@@ -15,23 +15,32 @@ class Ptolemy(object):
     def __init__(self):
         # Initialize variable to (5.0, 0.0)
         # In practice, these should be initialized to random values.
-        #        self.c = tf.Variable(np.array([51, 0.02, 3., 99, 0.01, 0.01]))
-        self.a0 = tfe.Variable(1.)
-        self.w0 = tfe.Variable(3.)
-        self.p0 = tfe.Variable(0.01)
+        # self.c = tfe.Variable(np.array([51, 0.02, 3., 99, 0.01, 0.01]))
+        self.a = tfe.Variable([[51., 99.]], dtype=tf.float32)
+        self.w = tfe.Variable([[0.02, 0.01]], dtype=tf.float32)
+        self.p = tfe.Variable([[2., 0.01]], dtype=tf.float32)
 
-        self.a1 = tfe.Variable(0.02)
-        self.w1 = tfe.Variable(0.9)
-        self.p1 = tfe.Variable(0.01)
+        # self.a0 = tfe.Variable(1.)
+        # self.w0 = tfe.Variable(3.)
+        # self.p0 = tfe.Variable(0.01)
+
+        # self.a1 = tfe.Variable(0.02)
+        # self.w1 = tfe.Variable(0.9)
+        # self.p1 = tfe.Variable(0.01)
 
     def __call__(self, t):
-        x = self.a0 * \
-            tf.cos(self.w0 * t + self.p0) + \
-            self.a1 * \
-            tf.cos(self.w1 * t + self.p1)
-        y = self.a0 * tf.sin(self.w0 * t + self.p0) + \
-            self.a1 * tf.sin(self.w1 * t + self.p1)
-        return tf.atan2(y, x)
+        # a_array = self.c[0::3]
+        # w_array = self.c[1::3]
+        # p_array = self.c[2::3]
+        print("t is : ", t)
+        x = 0.
+        y = 0.
+        phi = 0.
+        x = tf.matmul(self.a,
+                      tf.cos(tf.matmul(a=self.w, b=[t], transpose_a=True) +
+                             tf.transpose(self.p)))
+        phi = tf.atan2(y, x)
+        return phi
 
 
 def loss(predicted_y, desired_y):
@@ -41,15 +50,11 @@ def loss(predicted_y, desired_y):
 def train(model, inputs, outputs, learning_rate):
     with tf.GradientTape() as t:
         current_loss = loss(model(inputs), outputs)
-    da0, dw0, dp0, da1, dw1, dp1 = t.gradient(current_loss,
-                                              [model.a0, model.w0, model.p0,
-                                               model.a1, model.w1, model.p1])
-    model.a0.assign_sub(learning_rate * da0)
-    model.w0.assign_sub(learning_rate * dw0)
-    model.p0.assign_sub(learning_rate * dp0)
-    model.a1.assign_sub(learning_rate * da1)
-    model.w1.assign_sub(learning_rate * dw1)
-    model.p1.assign_sub(learning_rate * dp1)
+    d = t.gradient(current_loss,
+                   [model.a, model.w, model.p])
+    model.a.assign_sub(learning_rate * d[0])
+    model.w.assign_sub(learning_rate * d[1])
+    model.p.assign_sub(learning_rate * d[2])
 
 
 class Regressor(BaseEstimator):
@@ -100,14 +105,14 @@ class Regressor(BaseEstimator):
                     current_loss = loss(model_result, self.y_to_fit)
 
                     train(self.model, times, self.y_to_fit, learning_rate=0.1)
-                    print('Epoch %2d: w=%1.2f loss=%2.5f' %
-                          (epoch, self.model.w0.numpy(), current_loss))
-            self.c[0] = self.model.a0.numpy()
-            self.c[1] = self.model.w0.numpy()
-            self.c[2] = self.model.p0.numpy()
-            self.c[3] = self.model.a1.numpy()
-            self.c[4] = self.model.w1.numpy()
-            self.c[5] = self.model.p1.numpy()
+                    print('Epoch %2d: w=%s loss=%2.5f' %
+                          (epoch, str(self.model.w), current_loss))
+            self.c[0] = self.model.a[0, 0].numpy()
+            self.c[1] = self.model.w[0, 0].numpy()
+            self.c[2] = self.model.p[0, 0].numpy()
+            self.c[3] = self.model.a[0, 1].numpy()
+            self.c[4] = self.model.w[0, 1].numpy()
+            self.c[5] = self.model.p[0, 1].numpy()
 
             # self.c = np.append([1.], res.x)
 #            self.c = np.concatenate(self.c, np.append([1.], res.x), axis=1)
