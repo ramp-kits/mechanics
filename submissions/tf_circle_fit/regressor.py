@@ -12,32 +12,38 @@ tf.enable_eager_execution()
 
 
 class Ptolemy(object):
-    def __init__(self):
-        # Initialize variable to (5.0, 0.0)
-        # In practice, these should be initialized to random values.
-        # self.c = tfe.Variable(np.array([51, 0.02, 3., 99, 0.01, 0.01]))
-        self.a = tfe.Variable([[51., 99.]], dtype=tf.float32)
-        self.w = tfe.Variable([[0.02, 0.01]], dtype=tf.float32)
-        self.p = tfe.Variable([[2., 0.01]], dtype=tf.float32)
+    def __init__(self, n_epi=2):
+        # The variables
 
-        # self.a0 = tfe.Variable(1.)
-        # self.w0 = tfe.Variable(3.)
-        # self.p0 = tfe.Variable(0.01)
+        order_a = 1.
+        order_w = 0.001
+        order_p = 0.1
 
-        # self.a1 = tfe.Variable(0.02)
-        # self.w1 = tfe.Variable(0.9)
-        # self.p1 = tfe.Variable(0.01)
+        self.a = tfe.Variable(
+            tf.random_normal(shape=(1, n_epi),
+                             mean=order_a,
+                             stddev=order_a / 2.),
+            dtype=tf.float32)
+        self.w = tfe.Variable(
+            tf.random_normal(shape=(1, n_epi),
+                             mean=order_w,
+                             stddev=order_w / 2.),
+            dtype=tf.float32)
+        self.p = tfe.Variable(
+            tf.random_normal(shape=(1, n_epi),
+                             mean=order_p,
+                             stddev=order_p / 2.),
+            dtype=tf.float32)
 
     def __call__(self, t):
-        # a_array = self.c[0::3]
-        # w_array = self.c[1::3]
-        # p_array = self.c[2::3]
+        # The formula
+
         print("t is : ", t)
-        x = 0.
-        y = 0.
-        phi = 0.
         x = tf.matmul(self.a,
                       tf.cos(tf.matmul(a=self.w, b=[t], transpose_a=True) +
+                             tf.transpose(self.p)))
+        y = tf.matmul(self.a,
+                      tf.sin(tf.matmul(a=self.w, b=[t], transpose_a=True) +
                              tf.transpose(self.p)))
         phi = tf.atan2(y, x)
         return phi
