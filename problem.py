@@ -4,8 +4,8 @@ import pandas as pd
 import rampwf as rw
 import xarray as xr
 
-problem_title =\
-    'Prediction of the azimuth of Mars'
+problem_title = \
+    'Deducing system mechanics and formulas from limited information'
 
 _n_lookahead = 50
 _n_burn_in = 500
@@ -17,9 +17,7 @@ _debug_time_series = False
 Predictions = rw.prediction_types.make_regression(
     label_names=[_target])
 
-# El Nino, a.k.a. [TimeSeries, FeatureExtractor, Regressor]
-workflow = rw.workflows.Mechanics(
-    check_sizes=[_n_burn_in + 30], check_indexs=[_n_burn_in + 1])
+workflow = rw.workflows.Mechanics()
 
 score_types = [
     rw.score_types.RelativeRMSE(name='rel_rmse', precision=3)
@@ -34,6 +32,26 @@ def get_cv(X, y):
     train_is = np.arange(0, int(n / 2))
     test_is = np.arange(0, int(n / 2))
     yield (train_is, test_is)
+
+
+def make_time_series(X_ds, window=_n_burn_in):
+    X_array = X_ds['phi'].values.reshape(-1, 1)
+    X_ts = np.ndarray(shape=(len(X_array), 0))
+
+    for shift in np.arange(0, _n_burn_in):
+        #            print("Preparing series: ", shift)
+        X_ts = np.concatenate((
+            X_ts,
+            np.roll(X_array, -shift, axis=0)
+        ),
+            axis=1)
+    # This is the range for which features should be provided. Strip
+    # the burn-in from the beginning.
+
+    X_ts = X_ts[:, -window:]
+    print("X_ts valid shape : ", X_ts.shape)
+    print("X_ts valid : ", X_ts)
+    return pd.DataFrame(X_ts)
 
 
 # Both train and test targets are stripped off the first
@@ -66,12 +84,12 @@ def _read_data(path, filename):
 def get_train_data(path='.'):
     data_ds, y_array = _read_data(
         path,
-        "phis_nview_sysFSS0_planet1_nview100_nsim200000.csv")
-    return data_ds, y_array
+        "phis_sysC0_planet1_nview100_nsim200000.csv")
+    return make_time_series(data_ds), y_array
 
 
 def get_test_data(path='.'):
     data_ds, y_array = _read_data(
         path,
-        "phis_nview_sysFSS0_planet2_nview100_nsim200000.csv")
-    return data_ds, y_array
+        "phis_sysC0_planet1_nview100_nsim200000.csv")
+    return make_time_series(data_ds), y_array

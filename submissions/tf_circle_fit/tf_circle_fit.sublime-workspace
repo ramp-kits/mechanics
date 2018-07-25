@@ -83,17 +83,23 @@
 			"file": "regressor.py",
 			"settings":
 			{
-				"buffer_size": 1056,
-				"encoding": "UTF-8",
+				"buffer_size": 7336,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "ts_feature_extractor.py",
+			"file": "feature_extractor.py",
 			"settings":
 			{
-				"buffer_size": 1200,
-				"encoding": "UTF-8",
+				"buffer_size": 1208,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "fit_features.py",
+			"settings":
+			{
+				"buffer_size": 3457,
 				"line_ending": "Unix"
 			}
 		}
@@ -134,9 +140,7 @@
 	},
 	"file_history":
 	[
-		"/Users/yetkin/ramp/ramp-kits/mechanics/submissions/simple_LSTM/regressor.py",
-		"/Users/yetkin/ramp/ramp-kits/mechanics/submissions/starting_kit/regressor.py",
-		"/Users/yetkin/ramp/ramp-workflow/rampwf/workflows/mechanics.py",
+		"/Users/yetkin/kepler/produce_sample.py",
 		"/Users/yetkin/kepler/ConvertTimeSeries.py",
 		"/Users/yetkin/ramp/ramp-kits/kaggle_seguro/submissions/formulas/print_formulas.py",
 		"/Users/yetkin/ramp/ramp-kits/kaggle_seguro/submissions/formulas/print.sh",
@@ -204,7 +208,6 @@
 		"case_sensitive": false,
 		"find_history":
 		[
-			"pri",
 			"return acc",
 			"acc ",
 			"histo",
@@ -257,7 +260,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -266,34 +269,19 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1056,
+						"buffer_size": 7336,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								163,
-								163
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"auto_complete_triggers":
-							[
-								{
-									"characters": ".",
-									"selector": "source.python - string - comment - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								}
-							],
 							"syntax": "Packages/Python/Python.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
@@ -302,43 +290,28 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 2,
 					"type": "text"
 				},
 				{
 					"buffer": 1,
-					"file": "ts_feature_extractor.py",
+					"file": "feature_extractor.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1200,
+						"buffer_size": 1208,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								693,
-								693
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"auto_complete_triggers":
-							[
-								{
-									"characters": ".",
-									"selector": "source.python - string - comment - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								}
-							],
 							"syntax": "Packages/Python/Python.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
@@ -348,6 +321,36 @@
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "fit_features.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3457,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -389,7 +392,7 @@
 		"height": 0.0
 	},
 	"pinned_build_system": "",
-	"project": "simple_LSTM.sublime-project",
+	"project": "tf_circle_fit.sublime-project",
 	"replace":
 	{
 		"height": 42.0
