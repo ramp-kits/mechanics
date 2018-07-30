@@ -84,12 +84,12 @@ def _read_data(path, filename):
 def get_train_data(path='.'):
     data_ds, y_array = _read_data(
         path,
-        "phis_sysC0_planet1_nview100_nsim200000.csv")
+        "data_merged.csv")
     return make_time_series(data_ds), y_array
 
 
 def get_test_data(path='.'):
     data_ds, y_array = _read_data(
         path,
-        "phis_sysC0_planet1_nview100_nsim200000.csv")
+        "data_merged.csv")
     return make_time_series(data_ds), y_array
