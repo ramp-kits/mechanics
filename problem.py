@@ -51,6 +51,7 @@ def make_time_series(X_ds, window=_n_burn_in):
     X_ts = X_ts[:, -window:]
     print("X_ts valid shape : ", X_ts.shape)
     print("X_ts valid : ", X_ts)
+    # X_df['phi'] = X_ts
     return pd.DataFrame(X_ts)
 
 
@@ -80,16 +81,19 @@ def _read_data(path, filename):
         y_array = np.arange(0., len(data_array)).reshape(-1, 1)
     return data_ds, y_array
 
+n_sample = 100
 
 def get_train_data(path='.'):
     data_ds, y_array = _read_data(
         path,
-        "data_merged.csv")
-    return make_time_series(data_ds), y_array
+        #  "data_merged.csv")
+        "phis_sysFSS0_planet1_nview100_nsim200000.csv")
+    return make_time_series(data_ds)[:n_sample], y_array[:n_sample]
 
 
 def get_test_data(path='.'):
     data_ds, y_array = _read_data(
         path,
-        "data_merged.csv")
-    return make_time_series(data_ds), y_array
+        #  "data_merged.csv")
+        "phis_sysFSS0_planet1_nview100_nsim200000.csv")
+    return make_time_series(data_ds)[:n_sample], y_array[:n_sample]

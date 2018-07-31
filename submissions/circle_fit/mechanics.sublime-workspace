@@ -84,6 +84,15 @@
 	"buffers":
 	[
 		{
+			"file": "/Users/yetkin/ramp/ramp-kits/mechanics/problem.py",
+			"settings":
+			{
+				"buffer_size": 2981,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
 			"file": "regressor.py",
 			"settings":
 			{
@@ -93,19 +102,19 @@
 			}
 		},
 		{
-			"file": "feature_extractor.py",
+			"file": "ts_feature_extractor.py",
 			"settings":
 			{
-				"buffer_size": 613,
+				"buffer_size": 1208,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "/Users/yetkin/ramp/ramp-kits/mechanics/problem.py",
+			"file": "/Users/yetkin/ramp/ramp-kits/mechanics/prepare_data.py",
 			"settings":
 			{
-				"buffer_size": 2833,
+				"buffer_size": 1419,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -115,15 +124,6 @@
 			"settings":
 			{
 				"buffer_size": 1888,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Users/yetkin/ramp/ramp-workflow/rampwf/workflows/mechanics.py",
-			"settings":
-			{
-				"buffer_size": 326,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -165,7 +165,6 @@
 	},
 	"file_history":
 	[
-		"/Users/yetkin/backup/mechanics.py",
 		"/Users/yetkin/ramp/ramp-workflow/rampwf/workflows/mechanics.py",
 		"/Users/yetkin/kepler/ConvertTimeSeries.py",
 		"/Users/yetkin/ramp/ramp-kits/kaggle_seguro/submissions/formulas/print_formulas.py",
@@ -287,11 +286,68 @@
 	"groups":
 	[
 		{
-			"selected": 4,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
+					"file": "/Users/yetkin/ramp/ramp-kits/mechanics/problem.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2981,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2578,
+								2578
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".",
+									"selector": "source.python - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 763.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
 					"file": "regressor.py",
 					"semi_transient": false,
 					"settings":
@@ -303,8 +359,8 @@
 						"selection":
 						[
 							[
-								181,
-								181
+								2494,
+								2494
 							]
 						],
 						"settings":
@@ -345,27 +401,27 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 703.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 1,
-					"file": "feature_extractor.py",
+					"buffer": 2,
+					"file": "ts_feature_extractor.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 613,
+						"buffer_size": 1208,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								199,
-								199
+								900,
+								900
 							]
 						],
 						"settings":
@@ -375,10 +431,6 @@
 								{
 									"characters": ".",
 									"selector": "source.python - string - comment - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
 								},
 								{
 									"characters": ".",
@@ -413,20 +465,20 @@
 					"type": "text"
 				},
 				{
-					"buffer": 2,
-					"file": "/Users/yetkin/ramp/ramp-kits/mechanics/problem.py",
+					"buffer": 3,
+					"file": "/Users/yetkin/ramp/ramp-kits/mechanics/prepare_data.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2833,
+						"buffer_size": 1419,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								569,
-								569
+								1279,
+								1288
 							]
 						],
 						"settings":
@@ -444,18 +496,6 @@
 								{
 									"characters": ".",
 									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
 								}
 							],
 							"syntax": "Packages/Python/Python.sublime-syntax",
@@ -463,14 +503,14 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 28.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 3,
+					"buffer": 4,
 					"file": "fit_features.py",
 					"semi_transient": false,
 					"settings":
@@ -482,7 +522,7 @@
 						"selection":
 						[
 							[
-								0,
+								323,
 								323
 							]
 						],
@@ -493,38 +533,10 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "/Users/yetkin/ramp/ramp-workflow/rampwf/workflows/mechanics.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 326,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								326,
-								326
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
+					"stack_index": 4,
 					"type": "text"
 				}
 			]
