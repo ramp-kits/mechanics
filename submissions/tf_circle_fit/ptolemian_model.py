@@ -12,78 +12,58 @@ tf.enable_eager_execution()
 class Ptolemy(object):
     def __init__(self, n_epi=2):
         # The variables
-        self.order_a = 1.
-        self.order_w = 0.2
-        self.order_p = 3.
-        self.mask = np.zeros(shape=(2, 3))
-        self.a = tfe.Variable(
-            tf.random_normal(shape=(1, n_epi),
-                             mean=self.order_a,
-                             stddev=self.order_a),
+        self.order = np.ones(shape=(n_epi * 3, ))
+        self.mask = np.zeros(shape=(n_epi * 3, ))
+        self.c = tfe.Variable(
+            tf.random_normal(shape=(1, n_epi * 3),
+                             mean=self.order,
+                             stddev=self.order),
             dtype=tf.float32)
-        self.w = tfe.Variable(
-            tf.random_normal(shape=(1, n_epi),
-                             mean=self.order_w,
-                             stddev=self.order_w),
-            dtype=tf.float32)
-        self.p = tfe.Variable(
-            tf.random_normal(shape=(1, n_epi),
-                             mean=self.order_p,
-                             stddev=self.order_p),
-            dtype=tf.float32)
-        self.unit = np.ones(shape=(n_epi,))
+        self.unit = np.ones(shape=(n_epi * 3,))
 
     def freeze_parameters(self,
-                          mask=np.array([[1, 1, 1], [0, 0, 1]])):
+                          mask=np.array([1, 1, 1,
+                                         0, 0, 1])):
         self.mask = mask
 
     def assign_parameters(self,
-                          pars=np.array([[1., 0.28284271, 3.14159265],
-                                         [2., 0.28284271, 0.]])):
-        def assign(x, i):
-            x.assign(x * (self.unit - self.mask[:, i]) +
-                     pars[:, i] * self.mask[:, i])
-        assign(self.a, 0)
-        assign(self.w, 1)
-        assign(self.p, 2)
+                          pars=np.array([1., 0.28284271, 3.14159265,
+                                         2., 0.28284271, 0.])):
+        print("pars : ", pars)
+        print("mask : ", self.mask)
+        self.c.assign(self.c * (self.unit - self.mask) +
+                      pars * self.mask)
 
     def __call__(self, t):
         # The formula
-        x = tf.matmul(self.a,
-                      tf.cos(tf.matmul(a=self.w, b=[t], transpose_a=True) +
-                             tf.transpose(self.p)))
-        y = tf.matmul(self.a,
-                      tf.sin(tf.matmul(a=self.w, b=[t], transpose_a=True) +
-                             tf.transpose(self.p)))
+        x = tf.matmul(self.c[:, 0::3],
+                      tf.cos(tf.matmul(a=self.c[:, 1::3],
+                                       b=[t], transpose_a=True) +
+                             tf.transpose(self.c[:, 2::3])))
+        y = tf.matmul(self.c[:, 0::3],
+                      tf.sin(tf.matmul(a=self.c[:, 1::3],
+                                       b=[t], transpose_a=True) +
+                             tf.transpose(self.c[:, 2::3])))
         phi = tf.atan2(y, x)
         return phi
 
     def loss(self, predicted_y, desired_y):
         return tf.reduce_mean(tf.square(predicted_y - desired_y))
 
-    def train(self, inputs, outputs, learning_rate):
+    def train(self, inputs, outputs, rate):
         with tf.GradientTape() as t:
             current_loss = self.loss(self(inputs), outputs)
         d = t.gradient(current_loss,
-                       [self.a, self.w, self.p])
-
-        def move(x, o, i):
-            return x.assign_sub(learning_rate * o * d[i])
-        move(self.a, self.order_a, 0)
-        move(self.w, self.order_w, 1)
-        move(self.p, self.order_p, 2)
-
-        # self.a.assign_sub(learning_rate * d[0])
-        # self.w.assign_sub(learning_rate * d[1])
-        # self.p.assign_sub(learning_rate * d[2])
-        self.freeze_parameters()
+                       self.c)
+        d -= d * self.mask
+        self.c.assign_sub(d * rate)
 
     def test_parameters(self, aa, ww, X):
         z = np.ndarray(shape(len(aa), len(ww)))
         for a, w in np.meshgrid(axis_a, axis_w):
-            self.freeze_parameters([[1, 1, 1], [1, 1, 1]],
-                                   [[1., 0.28284271, 3.14159265],
-                                    [a, w, 0.]])
+            self.freeze_parameters([1, 1, 1, 1, 1, 1],
+                                   [1., 0.28284271, 3.14159265,
+                                    a, w, 0.])
             y = X[0, -500:]
             x = np.arange(0., len(y))
             z[i, j] = self.loss(self(x), y).numpy()

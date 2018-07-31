@@ -5,7 +5,7 @@ import rampwf as rw
 import xarray as xr
 
 problem_title = \
-    'Deducing system mechanics and formulas from limited information'
+    'Mechanics classification'
 
 _n_lookahead = 50
 _n_burn_in = 500
