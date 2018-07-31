@@ -18,7 +18,7 @@ class FeatureExtractor(object):
 
         # Maybe this will be where the mechanics will be determined
         # Formulas, main parameters etc.
-        X_phis = X_df.values
+        X_phis = X_df.drop(['planet', 'system'], axis=1).values
         self.c = np.array([])
         errors = np.ndarray(shape=(0, 3))
         self.params = [0]
@@ -65,7 +65,7 @@ class FeatureExtractor(object):
 
         # Maybe this will be where the mechanics will be determined
         # Formulas, main parameters etc.
-        X_phis = X_df.values
+        X_phis = X_df.drop(['planet', 'system'], axis=1).values
         self.c = np.array([])
         errors = np.ndarray(shape=(0, 3))
         self.params = [0]

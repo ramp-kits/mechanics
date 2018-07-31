@@ -40,11 +40,11 @@ def prepare_data():
                 str(planet) + \
                 "_nview100_nsim200000.csv"
             df = pd.read_csv(filename)
-            df['sys'] = i_sys
+            df['system'] = i_sys
             df['planet'] = planet
 
             data = data.append(df)
-    data.to_csv('data_merged.csv')
+    data.to_csv('data_merged.csv', index=False)
 
 
 prepare_data()

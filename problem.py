@@ -58,20 +58,17 @@ def make_time_series(X_ds, window=_n_burn_in):
 # Both train and test targets are stripped off the first
 # n_burn_in entries
 def _read_data(path, filename):
-    data_df = pd.read_csv(os.path.join(path, 'data', filename)).loc[::1]
-    data_array = data_df.drop(
-        ['time'], axis=1).values[0:- _n_burn_in - _n_lookahead:].reshape(-1)
-
+    input_df = pd.read_csv(os.path.join(path, 'data', filename)).loc[::1]
+    data_array = input_df['phi'].values[0:- _n_burn_in - _n_lookahead:].reshape(-1)
     # x = y to debug look-up times
     if(_debug_time_series):
         data_array = np.arange(0., len(data_array))
-    time = data_df['time'].values[0:- _n_burn_in - _n_lookahead:].reshape(-1)
+    time = input_df['time'].values[0:- _n_burn_in - _n_lookahead:].reshape(-1)
     data_xr = xr.DataArray(
         data_array, coords=[('time', time)], dims=('time'))
     data_ds = xr.Dataset({'phi': data_xr})
-    data_ds.attrs = {'n_burn_in': _n_burn_in, 'n_lookahead': _n_lookahead}
 
-    y_array = data_df[_target].values.reshape(-1, 1)
+    y_array = input_df[_target].values.reshape(-1, 1)
     y_array = y_array[_n_burn_in + _n_lookahead:]
 
     print("y_array : ", y_array.shape, " : ", y_array)
@@ -79,21 +76,29 @@ def _read_data(path, filename):
     # x = y to debug look-up times
     if(_debug_time_series):
         y_array = np.arange(0., len(data_array)).reshape(-1, 1)
-    return data_ds, y_array
+
+    data_df = make_time_series(data_ds)
+    data_df['planet'] = input_df['planet'].values[0:- _n_burn_in - _n_lookahead:].reshape(-1)
+    data_df['system'] = input_df['system'].values[0:- _n_burn_in - _n_lookahead:].reshape(-1)
+    return data_df, y_array
+
 
 n_sample = 100
 
+
 def get_train_data(path='.'):
-    data_ds, y_array = _read_data(
+    data_df, y_array = _read_data(
         path,
-        #  "data_merged.csv")
-        "phis_sysFSS0_planet1_nview100_nsim200000.csv")
-    return make_time_series(data_ds)[:n_sample], y_array[:n_sample]
+        "data_merged.csv")
+    # return data_ds[:n_sample], y_array[:n_sample]
+    #    "phis_sysFSS0_planet1_nview100_nsim200000.csv")
+    return data_df[:n_sample], y_array[:n_sample]
 
 
 def get_test_data(path='.'):
-    data_ds, y_array = _read_data(
+    data_df, y_array = _read_data(
         path,
-        #  "data_merged.csv")
-        "phis_sysFSS0_planet1_nview100_nsim200000.csv")
-    return make_time_series(data_ds)[:n_sample], y_array[:n_sample]
+        "data_merged.csv")
+    # return data_ds[:n_sample], y_array[:n_sample]
+    #    "phis_sysFSS0_planet1_nview100_nsim200000.csv")
+    return data_df[:n_sample], y_array[:n_sample]
