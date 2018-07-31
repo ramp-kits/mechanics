@@ -59,7 +59,8 @@ def make_time_series(X_ds, window=_n_burn_in):
 # n_burn_in entries
 def _read_data(path, filename):
     input_df = pd.read_csv(os.path.join(path, 'data', filename)).loc[::1]
-    data_array = input_df['phi'].values[0:- _n_burn_in - _n_lookahead:].reshape(-1)
+    data_array = input_df['phi'].values[0:-
+                                        _n_burn_in - _n_lookahead:].reshape(-1)
     # x = y to debug look-up times
     if(_debug_time_series):
         data_array = np.arange(0., len(data_array))
@@ -78,12 +79,14 @@ def _read_data(path, filename):
         y_array = np.arange(0., len(data_array)).reshape(-1, 1)
 
     data_df = make_time_series(data_ds)
-    data_df['planet'] = input_df['planet'].values[0:- _n_burn_in - _n_lookahead:].reshape(-1)
-    data_df['system'] = input_df['system'].values[0:- _n_burn_in - _n_lookahead:].reshape(-1)
+    data_df['planet'] = input_df['planet'].values[
+        0:- _n_burn_in - _n_lookahead:].reshape(-1)
+    data_df['system'] = input_df['system'].values[
+        0:- _n_burn_in - _n_lookahead:].reshape(-1)
     return data_df, y_array
 
 
-n_sample = 100
+n_sample = 10
 
 
 def get_train_data(path='.'):

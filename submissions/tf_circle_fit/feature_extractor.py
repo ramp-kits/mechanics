@@ -1,106 +1,111 @@
 import numpy as np
-from submissions.circle_fit.fit_features import *
+from submissions.tf_circle_fit.fit_features import *
 from submissions.tf_circle_fit.ptolemian_model import Ptolemy
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.decomposition import PCA
+from sklearn.pipeline import Pipeline
+from sklearn.base import BaseEstimator
 
 
 class FeatureExtractor(object):
 
     def __init__(self):
+        self.n_feat = 6
         self.params = np.array([])
         self.window = 0
         self.really_fit = True
-        self.model = Ptolemy()
+        self.models = []
+        for i in range(3):
+            self.models.append(Ptolemy(i))
+        self.models[2].assign_parameters(
+            pars=np.array([[1., 0.28284271, 3.14159265],
+                           [2., 0.28284271, 0.]])
+        )
+        self.n_components = 5
+        self.n_estimators = 10
+        self.clf = Pipeline([
+            ('pca', PCA(n_components=self.n_components)),
+            ('clf', RandomForestClassifier(
+                n_estimators=self.n_estimators, random_state=42))
+        ])
 
     def fit(self, X_df, y):
         print("======  X_df : ", X_df)
         n = X_df.shape[0]
-        X = np.ndarray(shape=(n, 6))
-
         # Maybe this will be where the mechanics will be determined
-        # Formulas, main parameters etc.
-        X_phis = X_df.drop(['planet', 'system'], axis=1).values
-        self.c = np.array([])
-        errors = np.ndarray(shape=(0, 3))
-        self.params = [0]
+        # Formulas, etc.
+        X_feat = np.ndarray(shape=(n, self.n_feat))
+        # X_target = X_df.loc(['planet', 'system'], axis=1).values
+        y_feat = X_df['system'].values
 
+        X_phis = X_df.drop(['planet', 'system'], axis=1).values
+
+        self.c = np.array([])
+        self.params = [0]
         for i in range(n):
             self.y_all = X_phis[i, :]
             print("y_all : ", self.y_all)
-            cc = fit_features(self.y_all)
+            nc, cc = qualitative_features(self.y_all)
+            maxima, minima, loops = find_local_extrema(self.y_all)
+            X_feat[i] = [len(maxima), len(minima), len(loops),
+                         maxima[0], minima[0], loops[0]]
             self.window = 4 * int(2. * np.pi / cc[1])
             self.c = cc
             self.fit_length = X_phis.shape[1]
             self.y_to_fit = X_phis[i, -self.fit_length:]
 
-            if(self.really_fit):
-                #    c_ind = cc[1:]
-                # cs = np.ndarray(shape=(0, 6))
-                epochs = range(100)
-                for epoch in epochs:
-                    # cs = np.append(cs, self.model.c.numpy(), axis=0)
-                    times = np.arange(0., len(self.y_to_fit))
-                    model_result = self.model(times)
-                    # print("model result : ", model_result)
-                    current_loss = self.model.loss(model_result, self.y_to_fit)
-                    self.model.train(times, self.y_to_fit,
-                                     learning_rate=0.01)
-                    print('Epoch %2d: w=%s loss=%2.5f' %
-                          (epoch, str(self.model.w), current_loss))
-                    errors = np.append(errors,
-                                       np.array([[self.model.a.numpy()[0, 1],
-                                                  self.model.w.numpy()[0, 1],
-                                                  current_loss.numpy()]]),
-                                       axis=0)
-            X[i][0] = self.model.a[0, 0].numpy()
-            X[i][1] = self.model.w[0, 0].numpy()
-            X[i][2] = self.model.p[0, 0].numpy()
-            X[i][3] = self.model.a[0, 1].numpy()
-            X[i][4] = self.model.w[0, 1].numpy()
-            X[i][5] = self.model.p[0, 1].numpy()
-        return X
+        self.clf.fit(X_feat, y_feat)
 
     def transform(self, X_df):
         n = X_df.shape[0]
-        X = np.ndarray(shape=(n, 6))
+        X = np.ndarray(shape=(n, 7))
 
-        # Maybe this will be where the mechanics will be determined
-        # Formulas, main parameters etc.
+        # This is where each time series is
+        # transoformed to be represented by a formula
+        # with optimized parameters
         X_phis = X_df.drop(['planet', 'system'], axis=1).values
         self.c = np.array([])
         errors = np.ndarray(shape=(0, 3))
         self.params = [0]
 
+        X_feat = np.ndarray(shape=(n, self.n_feat))
+        for i in range(n):
+            self.y_all = X_phis[i, :]
+            maxima, minima, loops = find_local_extrema(self.y_all)
+            X_feat[i] = [len(maxima), len(minima), len(loops),
+                         maxima[0], minima[0], loops[0]]
+
+        X_model = self.clf.predict(X_feat)
+
         for i in range(n):
             self.y_all = X_phis[i, :]
             print("y_all : ", self.y_all)
-            cc = fit_features(self.y_all)
+            nc, cc = qualitative_features(self.y_all)
+
             self.window = 4 * int(2. * np.pi / cc[1])
             self.c = cc
             self.fit_length = X_phis.shape[1]
             self.y_to_fit = X_phis[i, -self.fit_length:]
+            model = self.models[X_model[i]]
             if(self.really_fit):
-                #    c_ind = cc[1:]
-                # cs = np.ndarray(shape=(0, 6))
                 epochs = range(100)
                 for epoch in epochs:
                     # cs = np.append(cs, self.model.c.numpy(), axis=0)
                     times = np.arange(0., len(self.y_to_fit))
-                    model_result = self.model(times)
+                    model_result = model(times)
                     # print("model result : ", model_result)
-                    current_loss = self.model.loss(model_result, self.y_to_fit)
-                    self.model.train(times, self.y_to_fit,
-                                     learning_rate=0.01)
+                    current_loss = model.loss(model_result, self.y_to_fit)
+                    model.train(times, self.y_to_fit,
+                                learning_rate=0.01)
                     print('Epoch %2d: w=%s loss=%2.5f' %
-                          (epoch, str(self.model.w), current_loss))
-                    errors = np.append(errors,
-                                       np.array([[self.model.a.numpy()[0, 1],
-                                                  self.model.w.numpy()[0, 1],
-                                                  current_loss.numpy()]]),
-                                       axis=0)
-            X[i][0] = self.model.a[0, 0].numpy()
-            X[i][1] = self.model.w[0, 0].numpy()
-            X[i][2] = self.model.p[0, 0].numpy()
-            X[i][3] = self.model.a[0, 1].numpy()
-            X[i][4] = self.model.w[0, 1].numpy()
-            X[i][5] = self.model.p[0, 1].numpy()
+                          (epoch, str(model.w), current_loss))
+
+            X[i][0] = X_model[i]
+            X[i][1] = model.a[0, 0].numpy()
+            X[i][2] = model.w[0, 0].numpy()
+            X[i][3] = model.p[0, 0].numpy()
+            X[i][4] = model.a[0, 1].numpy()
+            X[i][5] = model.w[0, 1].numpy()
+            X[i][6] = model.p[0, 1].numpy()
         return X

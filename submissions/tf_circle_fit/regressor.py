@@ -11,8 +11,15 @@ class Regressor(BaseEstimator):
     def __init__(self):
         self.c = np.array([51, 0.02, 3., 99, 0.01, 0.01])
         self.really_fit = True
-        self.model = Ptolemy()
-        pass
+        for i in range(3):
+            self.models.append(Ptolemy(i))
+
+        self.models[0].assign_parameters(
+            pars=np.array([[1., 0.28284271, 3.14159265]]))
+
+        self.models[2].assign_parameters(
+            pars=np.array([[1., 0.28284271, 3.14159265],
+                           [2., 0.28284271, 0.]]))
 
     def fit(self, X, y):
         pass
@@ -23,10 +30,12 @@ class Regressor(BaseEstimator):
         print("n_predictions : ", n_predictions)
         y = np.zeros(n_predictions)
         for i in range(n_predictions):
-            a, w, p = decode_parameters(X[i])
-            self.model.freeze_parameters(
-                mask=np.ones(shape=(2, 3)),
+            model_type = X[i, 0]
+            model_parameters = X[i, 1:]
+            model = self.models[model_type]
+            a, w, p = decode_parameters(model_parameters)
+            model.assign_parameters(
                 pars=X[i].reshape(2, 3))
             # y[i] = f_phi(a, w, p, self.fit_length + _n_lookahead)
-            y[i] = self.model([_n_lookahead]).numpy()
+            y[i] = model([_n_lookahead]).numpy()
         return y.reshape(-1, 1)

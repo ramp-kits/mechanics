@@ -1,7 +1,4 @@
 import numpy as np
-import tensorflow as tf
-
-import numpy as np
 
 
 def f_x(a, w, p, t):
@@ -56,37 +53,42 @@ def find_local_extrema(x):
     return maxima, minima, loops
 
 
-def fit_features(x):
+def qualitative_features(x):
     "Fitting features..."
     a = np.array([1., 1.])
     w = np.array([1., 1.])
     p = np.array([1., 1.])
 
+    nc = 1
+    c = np.array([])
+
     # Find retrogrades
     maxima, minima, loops = find_local_extrema(x)
 
     # Find frequencies
-    dist = loops[-1] - loops[0]
-    nloop = len(loops) - 1
-    if(nloop > 0):
-        w[0] = 2. * np.pi / (dist / nloop)
+    if(len(loops) < 1):
+        nc = 1
+        c = np.array([[1., 0.28284271, 3.14159265]])
     else:
-        print("Failed to get frequency")
+        dist = loops[-1] - loops[0]
+        nloop = len(loops) - 1
+        if(dist > 0 & nloop > 0):
+            w[0] = 2. * np.pi / (dist / nloop)
+        else:
+            nc = 1
+            c = np.array([1., 0.28284271, 3.14159265])
+        dist = maxima[-1] - maxima[0]
+        nloop = len(maxima) - 1
+        if(nloop > 0):
+            w[1] = 2. * np.pi / (dist / nloop) + w[0]
+            nc = 2
 
-    dist = maxima[-1] - maxima[0]
-    nloop = len(maxima) - 1
-    if(nloop > 0):
-        w[1] = 2. * np.pi / (dist / nloop) + w[0]
-    else:
-        print("Failed to get frequency")
+        # Find phases
+        p[0] = loops[0] * w[0] - np.pi
+        p[1] = (maxima[0]) * w[1] - p[0]
 
-    # Find phases
-    p[0] = loops[0] * w[0] - np.pi
-    p[1] = (maxima[0]) * w[1] - p[0]
-
-    # Find amplitudes
-    a[0] = 1.
-    a[1] = 0.5
-
-    c = np.array([a[0], w[0], p[0], a[1], w[1], p[1]])
-    return c
+        # Find amplitudes
+        a[0] = 1.
+        a[1] = 0.5
+        c = np.array([a[0], w[0], p[0], a[1], w[1], p[1]])
+    return nc, c

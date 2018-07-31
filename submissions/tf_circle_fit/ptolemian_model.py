@@ -15,7 +15,7 @@ class Ptolemy(object):
         self.order_a = 1.
         self.order_w = 0.2
         self.order_p = 3.
-
+        self.mask = np.zeros(shape=(2, 3))
         self.a = tfe.Variable(
             tf.random_normal(shape=(1, n_epi),
                              mean=self.order_a,
@@ -31,20 +31,18 @@ class Ptolemy(object):
                              mean=self.order_p,
                              stddev=self.order_p),
             dtype=tf.float32)
-        self.freeze_parameters()
+        self.unit = np.ones(shape=(n_epi,))
 
     def freeze_parameters(self,
-                          mask=[[1, 1, 1], [0, 0, 1]],
-                          pars=[[1., 0.28284271, 3.14159265],
-                                [2., 0.28284271, 0.]]):
-        unit = np.array([1, 1])
+                          mask=np.array([[1, 1, 1], [0, 0, 1]])):
+        self.mask = mask
 
-        mask = np.array(mask)
-        pars = np.array(pars)
-
+    def assign_parameters(self,
+                          pars=np.array([[1., 0.28284271, 3.14159265],
+                                         [2., 0.28284271, 0.]])):
         def assign(x, i):
-            x.assign(x * (unit - mask[:, i]) + pars[:, i] * mask[:, i])
-
+            x.assign(x * (self.unit - self.mask[:, i]) +
+                     pars[:, i] * self.mask[:, i])
         assign(self.a, 0)
         assign(self.w, 1)
         assign(self.p, 2)
@@ -68,9 +66,13 @@ class Ptolemy(object):
             current_loss = self.loss(self(inputs), outputs)
         d = t.gradient(current_loss,
                        [self.a, self.w, self.p])
-        self.a.assign_sub(learning_rate * self.order_a * d[0])
-        self.w.assign_sub(learning_rate * self.order_w * d[1])
-        self.p.assign_sub(learning_rate * self.order_p * d[2])
+
+        def move(x, o, i):
+            return x.assign_sub(learning_rate * o * d[i])
+        move(self.a, self.order_a, 0)
+        move(self.w, self.order_w, 1)
+        move(self.p, self.order_p, 2)
+
         # self.a.assign_sub(learning_rate * d[0])
         # self.w.assign_sub(learning_rate * d[1])
         # self.p.assign_sub(learning_rate * d[2])
