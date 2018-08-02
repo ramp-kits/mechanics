@@ -49,7 +49,7 @@ class Ptolemy(object):
 
     def loss(self, predicted_y, desired_y):
         difference = tf.reduce_mean(tf.square(predicted_y - desired_y))
-        l1_penalty = tf.multiply(0., tf.reduce_sum(tf.abs(self.c[:, 0::3])))
+        l1_penalty = tf.multiply(0.1, tf.reduce_sum(tf.abs(self.c[:, 0::3])))
         return difference + l1_penalty
 
     def train(self, inputs, outputs, rate):

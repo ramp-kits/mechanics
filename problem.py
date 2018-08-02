@@ -7,7 +7,7 @@ import xarray as xr
 problem_title = \
     'Mechanics classification'
 
-_n_lookahead = 50
+_n_lookahead = 100
 _n_burn_in = 500
 _filename = 'test_angles_perfect_circle_nview10_n1M.csv'
 _target = 'phi'
