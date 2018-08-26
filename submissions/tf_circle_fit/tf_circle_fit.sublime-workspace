@@ -95,7 +95,16 @@
 			"file": "ptolemian_model.py",
 			"settings":
 			{
-				"buffer_size": 2527,
+				"buffer_size": 2649,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "feature_extractor.py",
+			"settings":
+			{
+				"buffer_size": 4213,
 				"line_ending": "Unix"
 			}
 		}
@@ -266,28 +275,69 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2527,
+						"buffer_size": 2649,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1329,
-								1347
+								1840,
+								1840
+							]
+						],
+						"settings":
+						{
+							"auto_complete_triggers":
+							[
+								{
+									"characters": ".",
+									"selector": "source.python - string - comment - constant.numeric"
+								},
+								{
+									"characters": ".",
+									"selector": "source.python - string - constant.numeric"
+								}
+							],
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 340.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "feature_extractor.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4213,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3993,
+								4058
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 2,
+							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 387.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
