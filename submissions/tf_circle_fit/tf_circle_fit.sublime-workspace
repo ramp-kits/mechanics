@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"p",
+				"p"
+			],
+			[
+				"w",
+				"w\tstatement"
+			],
+			[
+				"n",
+				"n\tstatement"
+			],
+			[
 				"i",
 				"i\tstatement"
 			],
@@ -80,26 +92,10 @@
 	"buffers":
 	[
 		{
-			"file": "regressor.py",
+			"file": "ptolemian_model.py",
 			"settings":
 			{
-				"buffer_size": 7336,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "feature_extractor.py",
-			"settings":
-			{
-				"buffer_size": 1208,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "fit_features.py",
-			"settings":
-			{
-				"buffer_size": 3457,
+				"buffer_size": 2527,
 				"line_ending": "Unix"
 			}
 		}
@@ -140,7 +136,7 @@
 	},
 	"file_history":
 	[
-		"/Users/yetkin/kepler/produce_sample.py",
+		"/Users/yetkin/ramp/ramp-workflow/rampwf/workflows/mechanics.py",
 		"/Users/yetkin/kepler/ConvertTimeSeries.py",
 		"/Users/yetkin/ramp/ramp-kits/kaggle_seguro/submissions/formulas/print_formulas.py",
 		"/Users/yetkin/ramp/ramp-kits/kaggle_seguro/submissions/formulas/print.sh",
@@ -208,6 +204,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"pri",
 			"return acc",
 			"acc ",
 			"histo",
@@ -260,90 +257,30 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "regressor.py",
+					"file": "ptolemian_model.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7336,
+						"buffer_size": 2527,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1329,
+								1347
 							]
 						],
 						"settings":
 						{
 							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "feature_extractor.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1208,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "fit_features.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 3457,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
