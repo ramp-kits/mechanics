@@ -1,23 +1,45 @@
 import numpy as np
-import tensorflow as tf
-import tensorflow.contrib.eager as tfe
+import torch
+
 
 _n_lookahead = 50
 _n_burn_in = 500
 
-tf.enable_eager_execution()
+
+# class DynamicNet(torch.nn.Module):
+#     def __init__(self, D_in, H, D_out):
+#         super(DynamicNet, self).__init__()
+#         self.input_linear = torch.nn.Linear(D_in, H)
+#         self.middle_linear = torch.nn.Linear(H, H)
+#         self.output_linear = torch.nn.Linear(H, D_out)
+
+#     def forward(self, x):
+#         h_relu = self.input_linear(x).clamp(min=0)
+#         for _ in range(5):
+#             h_relu = self.middle_linear(h_relu).clamp(min=0)
+#         y_pred = self.output_linear(h_relu)
+#         return y_pred
+class Propagate(torch.autograd.Function):
+
+    @staticmethod
+    def forward(ctx, input):
+        ctx.save_for_backward(input)
+        return input.clamp(min=0)
+
+    @staticmethod
+    def backward(ctx, grad_output):
+        input, = ctx.saved_tensors
+        grad_input = grad_output.clone()
+        grad_input[input < 0] = 0
+        return grad_input
 
 
-class Simulation(object):
+class Simulation(torch.nn.Module):
     def __init__(self, n_var=6):
         # The variables
         self.order = np.ones(shape=(n_var, ))
         self.mask = np.zeros(shape=(n_var, ))
-        self.c = tfe.Variable(
-            tf.random_normal(shape=(n_var, ),
-                             mean=self.order,
-                             stddev=self.order),
-            dtype=tf.float32)
+        self.c = torch.randn(n_var, requires_grad=True)
         self.unit = np.ones(shape=(n_var,))
 
     def freeze_parameters(self,
@@ -33,7 +55,6 @@ class Simulation(object):
         print("mask : ", self.mask)
         self.c.assign(self.c * (self.unit - self.mask) +
                       pars * self.mask)
-  
         n_max = 500
         self.n = n_max
 
@@ -67,7 +88,7 @@ class Simulation(object):
                        np.sqrt(np.dot(x, x))])
         return xx
 
-    def __call__(self, times):
+    def forward(self, times):
         # The formula
 
         self.phi = self.c[0]
@@ -90,15 +111,35 @@ class Simulation(object):
             output.append(self.inverse_transform(x - x0)[0])
         return output
 
-    def loss(self, predicted_y, desired_y):
-        return tf.reduce_mean(tf.square(predicted_y - desired_y))
 
-    def train(self, inputs, outputs, rate):
-        with tf.GradientTape() as t:
-            current_loss = self.loss(self(inputs), outputs)
-        d = t.gradient(current_loss,
-                       [self.c])
-        print("d : ", d)
-        # d -= d * self.mask
-        # self.assign_parameters(self.c - d * rate)
-        self.c.assign_sub(d * rate)
+x = range(100)
+y = np.mod(x, (2. * np.pi))
+
+model = Simulation()
+learning_rate = 1e-4
+
+for t in range(500):
+    y_pred = model.forward(x)
+
+    # Compute and print loss
+    loss = model.loss(y_pred, y)
+    print(t, loss.item())
+
+    # Use autograd to compute the backward pass.
+    loss.backward()
+
+    # Update weights using gradient descent
+    with torch.no_grad():
+        for param in model.parameters():
+            param -= learning_rate * param.grad
+
+
+
+
+
+
+
+
+
+
+
