@@ -29,8 +29,8 @@ class Ptolemy(object):
     def assign_parameters(self,
                           pars=np.array([1., 0.28284271, 3.14159265,
                                          2., 0.28284271, 0.])):
-        print("pars : ", pars)
-        print("mask : ", self.mask)
+        # print("pars : ", pars)
+        # print("mask : ", self.mask)
         self.c.assign(self.c * (self.unit - self.mask) +
                       pars * self.mask)
 

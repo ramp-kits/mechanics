@@ -3,6 +3,7 @@ import pandas as pd
 
 
 _n_burn_in = 500
+labels = ['A', 'B', 'C', 'D']
 
 
 def make_time_series(X_ds, window=_n_burn_in):
@@ -29,9 +30,9 @@ def prepare_data():
     data = pd.DataFrame()
     for i_sys, sys in enumerate(["C0",
                                  "FSS0", "FSS1", "FSS5",
-                                 "FDS0", "FDS1", "FDS5",
-                                 "FG0", "FG1", "FG5",
-                                 "FGM0", "FGM1", "FGM5"
+                                 # "FDS0", "FDS1", "FDS5",
+                                 # "FG0", "FG1", "FG5",
+                                 # "FGM0", "FGM1", "FGM5"
                                  ]):
         for planet in range(1, 3):
             filename = "data/phis_sys" + \
@@ -40,7 +41,7 @@ def prepare_data():
                 str(planet) + \
                 "_nview100_nsim200000.csv"
             df = pd.read_csv(filename)
-            df['system'] = i_sys
+            df['system'] = labels[i_sys]
             df['planet'] = planet
 
             data = data.append(df)
