@@ -10,8 +10,7 @@ problem_title = \
 
 _n_lookahead = 100
 _n_burn_in = 20
-_filename = 'test_angles_perfect_circle_nview10_n1M.csv'
-_target = 'phi'
+_filename = 'data_ts_merged.csv'
 # Need better error messages for invalid input parameters
 _debug_time_series = False
 
@@ -20,7 +19,7 @@ _prediction_label_names = ['A', 'B', 'C', 'D']
 # the regression target column
 _target_column_name_clf = 'system'
 # the classification target column
-_target_column_name_reg = 'phi'
+_target_column_name_reg = 'future'
 
 # The first four columns of y_pred will be wrapped in multiclass Predictions.
 Predictions_1 = rw.prediction_types.make_multiclass(
@@ -94,46 +93,14 @@ def make_time_series(X_ds, window=_n_burn_in):
 # n_burn_in entries
 def _read_data(path, filename):
     input_df = pd.read_csv(os.path.join(path, 'data', filename)).loc[::1]
-    data_array = input_df['phi'].values[0:-
-                                        _n_burn_in - _n_lookahead:].reshape(-1)
-    # x = y to debug look-up times
-    if(_debug_time_series):
-        data_array = np.arange(0., len(data_array))
-    time = input_df['time'].values[0:- _n_burn_in - _n_lookahead:].reshape(-1)
-    data_xr = xr.DataArray(
-        data_array, coords=[('time', time)], dims=('time'))
-    data_ds = xr.Dataset({'phi': data_xr})
+    data_df = input_df.drop(['future', 'system'], axis=1)
 
-    y_reg_array = input_df[_target_column_name_reg].values[
-        _n_burn_in + _n_lookahead:].reshape(-1, 1)
-    y_clf_array = input_df[_target_column_name_clf].values[
-        : -_n_burn_in - _n_lookahead].reshape(-1, 1)
-
-    # Hack for quick testing
-    y_clf_array = np.tile(['A', 'B', 'C', 'D'], int(
-        len(y_reg_array) / 4)).reshape(-1, 1)
-    print(y_clf_array)
-    print(y_clf_array.shape)
-    print(y_reg_array.shape)
-
+    y_reg_array = input_df[_target_column_name_reg].values.reshape(-1, 1)
+    y_clf_array = input_df[_target_column_name_clf].values.reshape(-1, 1)
     y_array = np.concatenate((y_clf_array,
                               y_reg_array), axis=1)
     print("y_array : ", y_array.shape, " : ", y_array)
-    print("data_ds : ", data_ds)
-    # x = y to debug look-up times
-    if(_debug_time_series):
-        y_array = np.arange(0., len(data_array)).reshape(-1, 1)
-
-    data_df = make_time_series(data_ds)
-
-#    data_df['planet'] = input_df['planet'].values[
-#        0:- _n_burn_in - _n_lookahead:].reshape(-1)
-
-#    data_df['system'] = input_df['system'].values[
-#        0:- _n_burn_in - _n_lookahead:].reshape(-1)
-
     return data_df, y_array
-
 
 n_sample = 10
 
@@ -141,7 +108,7 @@ n_sample = 10
 def get_train_data(path='.'):
     data_df, y_array = _read_data(
         path,
-        "data_merged.csv")
+        _filename)
     # return data_ds[:n_sample], y_array[:n_sample]
     #    "phis_sysFSS0_planet1_nview100_nsim200000.csv"
     return data_df[:n_sample], y_array[:n_sample]
@@ -150,7 +117,7 @@ def get_train_data(path='.'):
 def get_test_data(path='.'):
     data_df, y_array = _read_data(
         path,
-        "data_merged.csv")
+        _filename)
     # return data_ds[:n_sample], y_array[:n_sample]
     #    "phis_sysFSS0_planet1_nview100_nsim200000.csv")
     return data_df[:n_sample], y_array[:n_sample]
