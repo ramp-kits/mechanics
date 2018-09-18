@@ -91,14 +91,6 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "regressor.py",
-			"settings":
-			{
-				"buffer_size": 1050,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -259,39 +251,8 @@
 	"groups":
 	[
 		{
-			"selected": 0,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "regressor.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1050,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -331,7 +292,7 @@
 		"height": 0.0
 	},
 	"pinned_build_system": "",
-	"project": "simple_LSTM.sublime-project",
+	"project": "mechanics.sublime-project",
 	"replace":
 	{
 		"height": 42.0

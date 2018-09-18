@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"p",
+				"p"
+			],
+			[
+				"w",
+				"w\tstatement"
+			],
+			[
 				"n",
 				"n\tstatement"
 			],
@@ -84,38 +92,10 @@
 	"buffers":
 	[
 		{
-			"file": "regressor.py",
+			"file": "classifier.py",
 			"settings":
 			{
-				"buffer_size": 3477,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "ts_feature_extractor.py",
-			"settings":
-			{
-				"buffer_size": 1200,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/Users/yetkin/ramp/ramp-kits/mechanics/problem.py",
-			"settings":
-			{
-				"buffer_size": 2292,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "fit_features.py",
-			"settings":
-			{
-				"buffer_size": 1888,
-				"encoding": "UTF-8",
+				"buffer_size": 836,
 				"line_ending": "Unix"
 			}
 		}
@@ -156,6 +136,8 @@
 	},
 	"file_history":
 	[
+		"/Users/yetkin/ramp/ramp-kits/mechanics/submissions/tf_force/simulation_model.py",
+		"/Users/yetkin/ramp/ramp-kits/mechanics/submissions/tf_force/force_model.py",
 		"/Users/yetkin/ramp/ramp-workflow/rampwf/workflows/mechanics.py",
 		"/Users/yetkin/kepler/ConvertTimeSeries.py",
 		"/Users/yetkin/ramp/ramp-kits/kaggle_seguro/submissions/formulas/print_formulas.py",
@@ -210,7 +192,7 @@
 	],
 	"find":
 	{
-		"height": 35.0
+		"height": 23.0
 	},
 	"find_in_files":
 	{
@@ -277,116 +259,28 @@
 	"groups":
 	[
 		{
-			"selected": 2,
+			"selected": 0,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "regressor.py",
+					"file": "classifier.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3477,
+						"buffer_size": 836,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2564,
-								2581
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"auto_complete_triggers":
-							[
-								{
-									"characters": ".",
-									"selector": "source.python - string - comment - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								}
-							],
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 785.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "ts_feature_extractor.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1200,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								203,
-								203
-							]
-						],
-						"settings":
-						{
-							"auto_complete_triggers":
-							[
-								{
-									"characters": ".",
-									"selector": "source.python - string - comment - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								}
-							],
 							"syntax": "Packages/Python/Python.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
@@ -395,86 +289,7 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "/Users/yetkin/ramp/ramp-kits/mechanics/problem.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2292,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								911,
-								911
-							]
-						],
-						"settings":
-						{
-							"auto_complete_triggers":
-							[
-								{
-									"characters": ".",
-									"selector": "source.python - string - comment - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								}
-							],
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 161.0,
-						"zoom_level": 1.0
-					},
 					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "fit_features.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1888,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								323,
-								323
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 1.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -516,7 +331,7 @@
 		"height": 0.0
 	},
 	"pinned_build_system": "",
-	"project": "mechanics.sublime-project",
+	"project": "tf_circle_fit.sublime-project",
 	"replace":
 	{
 		"height": 42.0
