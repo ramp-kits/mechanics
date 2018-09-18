@@ -1,28 +1,40 @@
+from sklearn.ensemble import GradientBoostingRegressor
+from sklearn.decomposition import PCA
+from sklearn.pipeline import Pipeline
 from sklearn.base import BaseEstimator
-from keras.layers import Input, Dense
-from keras.models import Model
-from keras.layers import LSTM
 import numpy as np
 
 
 class Regressor(BaseEstimator):
     def __init__(self):
-        pass
+        self.n_components = 10
+        self.n_estimators = 40
+        self.learning_rate = 0.2
+        self.list_model = ['A', 'B', 'C', 'D']
+
+        self.dict_reg = {}
+        for mod in self.list_model:
+            self.dict_reg[mod] = Pipeline([
+                ('pca', PCA(n_components=self.n_components)),
+                ('reg', GradientBoostingRegressor(
+                    n_estimators=self.n_estimators,
+                    learning_rate=self.learning_rate,
+                    random_state=42))
+            ])
 
     def fit(self, X, y):
-        self.n_sample = X.shape[1]
-        inputs = Input(shape=(self.n_sample, 1),
-                       dtype='float', name='main_input')
-        layer = LSTM(8)(inputs)
-        predictions = Dense(1)(layer)
-        self.model = Model(inputs=inputs, outputs=predictions)
-        self.model.compile(optimizer='adam',
-                           loss='mean_squared_error')
-
-        self.model.fit(X.reshape(-1, self.n_sample, 1), y,
-                       epochs=1, batch_size=1, verbose=2)
+        for i, mod in enumerate(self.list_model):
+            ind_mod = np.where(np.argmax(X[:, -4:], axis=1) == i)[0]
+            X_mod = X[ind_mod, 0: -4]
+            y_mod = y[ind_mod]
+            if(len(y_mod) > 0):
+                self.dict_reg[mod].fit(X_mod, y_mod)
 
     def predict(self, X):
-        y_pred = np.array(self.model.predict(
-            X.reshape(-1, self.n_sample, 1))).reshape(-1, 1)
+        y_pred = np.zeros(X.shape[0])
+        for i, mod in enumerate(self.list_model):
+            ind_mod = np.where(np.argmax(X[:, -4:], axis=1) == i)[0]
+            X_mod = X[ind_mod, 0: -4]
+            if(len(X_mod) > 0):
+                y_pred[ind_mod] = self.dict_reg[mod].predict(X_mod)
         return y_pred
