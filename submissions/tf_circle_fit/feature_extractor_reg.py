@@ -15,6 +15,79 @@ _n_burn_in = 500
 tf.enable_eager_execution()
 
 
+def find_local_extrema(x):
+    n = 3
+    maxima = np.array([])
+    minima = np.array([])
+    loops = np.array([])
+
+    p_prev = np.zeros(n)
+    d_prev = np.zeros(n)
+    c_prev = np.zeros(n)
+
+    for i, p in enumerate(x):
+        d = p - p_prev[0]
+        if(d < - np.pi):
+            loops = np.append(loops, i)
+            d = d + 2. * np.pi
+
+        if(d > np.pi):
+            d = d - 2. * np.pi
+        c = d - d_prev[0]
+
+        if((d * d_prev[0]) < 0):
+            if(c < 0):
+                maxima = np.append(maxima, i)
+            else:
+                minima = np.append(minima, i)
+
+        p_prev = np.append(p, p_prev[:n])
+        d_prev = np.append(d, d_prev[:n])
+        c_prev = np.append(c, c_prev[:n])
+#    print(loops)
+    return maxima, minima, loops
+
+def qualitative_features(x):
+    "Fitting features..."
+    a = np.array([1., 1.])
+    w = np.array([1., 1.])
+    p = np.array([1., 1.])
+
+    nc = 1
+    c = np.array([])
+
+    # Find retrogrades
+    maxima, minima, loops = find_local_extrema(x)
+
+    # Find frequencies
+    if(len(loops) < 1):
+        nc = 1
+        c = np.array([[1., 0.28284271, 3.14159265]])
+    else:
+        dist = loops[-1] - loops[0]
+        nloop = len(loops) - 1
+        if(dist > 0 & nloop > 0):
+            w[0] = 2. * np.pi / (dist / nloop)
+        else:
+            nc = 1
+            c = np.array([1., 0.28284271, 3.14159265])
+        dist = maxima[-1] - maxima[0]
+        nloop = len(maxima) - 1
+        if(nloop > 0):
+            w[1] = 2. * np.pi / (dist / nloop) + w[0]
+            nc = 2
+
+        # Find phases
+        p[0] = loops[0] * w[0] - np.pi
+        p[1] = (maxima[0]) * w[1] - p[0]
+
+        # Find amplitudes
+        a[0] = 1.
+        a[1] = 0.5
+        c = np.array([a[0], w[0], p[0], a[1], w[1], p[1]])
+    return nc, c
+
+
 class Ptolemy(object):
     def __init__(self, n_epi=2):
         # The variables
@@ -105,11 +178,21 @@ class FeatureExtractor(object):
         self.c = np.array([])
         self.params = [0]
 
+        X_feat = np.ndarray(shape=(n, self.n_feat))
+        for i in range(n):
+            self.y_all = X_phis[i, :]
+            if(False):
+                maxima, minima, loops = find_local_extrema(self.y_all)
+                X_feat[i] = [len(maxima), len(minima), len(loops),
+                             maxima[0], minima[0], loops[0]]
+
         for i in range(n):
             self.y_all = X_phis[i, :]
             self.y_to_fit = self.y_all
             model = self.models[np.argmax(X_system[i])]
 
+            nc, cc = qualitative_features(self.y_all)
+            self.c = cc
             self.fit_length = X_phis.shape[1]
             self.y_to_fit = X_phis[i, -self.fit_length:]
             if(self.really_fit):
@@ -126,7 +209,6 @@ class FeatureExtractor(object):
                     #       str(model.c.numpy()),
                     #       current_loss))
             self.c = model.c.numpy()
-
             X[i][0] = model([_n_burn_in + _n_lookahead]).numpy()
             # X[i][1] = X_model[i]
             # for p in range(len(model.c.numpy()[0])):

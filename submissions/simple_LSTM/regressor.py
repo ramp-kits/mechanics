@@ -10,12 +10,6 @@ class Regressor(BaseEstimator):
         pass
 
     def fit(self, X, y):
-        print("Fitting LSTM...")
-        print(X.shape)
-        print(X)
-        print(y.shape)
-        print(y)
-
         self.n_sample = X.shape[1]
         inputs = Input(shape=(self.n_sample, 1),
                        dtype='float', name='main_input')
@@ -31,5 +25,4 @@ class Regressor(BaseEstimator):
     def predict(self, X):
         y_pred = np.array(self.model.predict(
             X.reshape(-1, self.n_sample, 1))).reshape(-1, 1)
-        print("y_pred : ", y_pred)
         return y_pred

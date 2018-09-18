@@ -92,19 +92,10 @@
 	"buffers":
 	[
 		{
-			"file": "ptolemian_model.py",
+			"file": "classifier.py",
 			"settings":
 			{
-				"buffer_size": 2649,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "feature_extractor.py",
-			"settings":
-			{
-				"buffer_size": 4213,
+				"buffer_size": 836,
 				"line_ending": "Unix"
 			}
 		}
@@ -145,6 +136,8 @@
 	},
 	"file_history":
 	[
+		"/Users/yetkin/ramp/ramp-kits/mechanics/submissions/tf_force/simulation_model.py",
+		"/Users/yetkin/ramp/ramp-kits/mechanics/submissions/tf_force/force_model.py",
 		"/Users/yetkin/ramp/ramp-workflow/rampwf/workflows/mechanics.py",
 		"/Users/yetkin/kepler/ConvertTimeSeries.py",
 		"/Users/yetkin/ramp/ramp-kits/kaggle_seguro/submissions/formulas/print_formulas.py",
@@ -271,73 +264,32 @@
 			[
 				{
 					"buffer": 0,
-					"file": "ptolemian_model.py",
+					"file": "classifier.py",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2649,
+						"buffer_size": 836,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1840,
-								1840
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"auto_complete_triggers":
-							[
-								{
-									"characters": ".",
-									"selector": "source.python - string - comment - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								}
-							],
 							"syntax": "Packages/Python/Python.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 340.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "feature_extractor.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 4213,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								3993,
-								4058
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 387.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
 					"type": "text"
 				}
 			]

@@ -66,7 +66,6 @@ def get_cv(X, y):
 
     for label in _prediction_label_names:
         y_class = np.where(y[:, 0] == label)[0]
-        print(y_class)
         np.random.shuffle(y_class)
         n = len(y_class)
         train_is = np.append(train_is, y_class[:int(n / 2)], axis=0)
@@ -74,8 +73,6 @@ def get_cv(X, y):
 
     np.random.shuffle(train_is)
     np.random.shuffle(test_is)
-    print("training indices : ", train_is)
-    print("test indices : ", test_is)
     yield (train_is, test_is)
 
 
@@ -94,9 +91,6 @@ def make_time_series(X_ds, window=_n_burn_in):
     # the burn-in from the beginning.
 
     X_ts = X_ts[:, -window:]
-    print("X_ts valid shape : ", X_ts.shape)
-    print("X_ts valid : ", X_ts)
-    # X_df['phi'] = X_ts
     return pd.DataFrame(X_ts)
 
 
@@ -110,7 +104,6 @@ def _read_data(path, filename):
     y_clf_array = input_df[_target_column_name_clf].values.reshape(-1, 1)
     y_array = np.concatenate((y_clf_array,
                               y_reg_array), axis=1)
-    print("y_array : ", y_array.shape, " : ", y_array)
     return data_df, y_array
 
 n_sample = 50

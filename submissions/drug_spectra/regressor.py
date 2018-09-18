@@ -10,11 +10,11 @@ class Regressor(BaseEstimator):
         self.n_components = 10
         self.n_estimators = 40
         self.learning_rate = 0.2
-        self.list_molecule = ['A', 'B', 'C', 'D']
+        self.list_model = ['A', 'B', 'C', 'D']
 
         self.dict_reg = {}
-        for mol in self.list_molecule:
-            self.dict_reg[mol] = Pipeline([
+        for mod in self.list_model:
+            self.dict_reg[mod] = Pipeline([
                 ('pca', PCA(n_components=self.n_components)),
                 ('reg', GradientBoostingRegressor(
                     n_estimators=self.n_estimators,
@@ -23,23 +23,18 @@ class Regressor(BaseEstimator):
             ])
 
     def fit(self, X, y):
-        for i, mol in enumerate(self.list_molecule):
-            ind_mol = np.where(np.argmax(X[:, -4:], axis=1) == i)[0]
-            X_mol = X[ind_mol, 0: -4]
-            y_mol = y[ind_mol]
-            if(len(y_mol) > 0):
-                print("X_mol : ", X_mol)
-                print("y_mol : ", y_mol)
-                self.dict_reg[mol].fit(X_mol, y_mol)
+        for i, mod in enumerate(self.list_model):
+            ind_mod = np.where(np.argmax(X[:, -4:], axis=1) == i)[0]
+            X_mod = X[ind_mod, 0: -4]
+            y_mod = y[ind_mod]
+            if(len(y_mod) > 0):
+                self.dict_reg[mod].fit(X_mod, y_mod)
 
     def predict(self, X):
         y_pred = np.zeros(X.shape[0])
-        print("X : ", X)
-        for i, mol in enumerate(self.list_molecule):
-            ind_mol = np.where(np.argmax(X[:, -4:], axis=1) == i)[0]
-            X_mol = X[ind_mol, 0: -4]
-            print("ind_mol : ", ind_mol)
-            print("X_mol : ", X_mol)
-            if(len(X_mol) > 0):
-                y_pred[ind_mol] = self.dict_reg[mol].predict(X_mol)
+        for i, mod in enumerate(self.list_model):
+            ind_mod = np.where(np.argmax(X[:, -4:], axis=1) == i)[0]
+            X_mod = X[ind_mod, 0: -4]
+            if(len(X_mod) > 0):
+                y_pred[ind_mod] = self.dict_reg[mod].predict(X_mod)
         return y_pred

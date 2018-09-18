@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"p",
+				"p"
+			],
+			[
+				"w",
+				"w\tstatement"
+			],
+			[
+				"n",
+				"n\tstatement"
+			],
+			[
 				"i",
 				"i\tstatement"
 			],
@@ -83,17 +95,7 @@
 			"file": "regressor.py",
 			"settings":
 			{
-				"buffer_size": 1056,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "ts_feature_extractor.py",
-			"settings":
-			{
-				"buffer_size": 1200,
-				"encoding": "UTF-8",
+				"buffer_size": 1050,
 				"line_ending": "Unix"
 			}
 		}
@@ -134,8 +136,8 @@
 	},
 	"file_history":
 	[
-		"/Users/yetkin/ramp/ramp-kits/mechanics/submissions/simple_LSTM/regressor.py",
-		"/Users/yetkin/ramp/ramp-kits/mechanics/submissions/starting_kit/regressor.py",
+		"/Users/yetkin/ramp/ramp-kits/mechanics/submissions/tf_force/simulation_model.py",
+		"/Users/yetkin/ramp/ramp-kits/mechanics/submissions/tf_force/force_model.py",
 		"/Users/yetkin/ramp/ramp-workflow/rampwf/workflows/mechanics.py",
 		"/Users/yetkin/kepler/ConvertTimeSeries.py",
 		"/Users/yetkin/ramp/ramp-kits/kaggle_seguro/submissions/formulas/print_formulas.py",
@@ -266,34 +268,19 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 1056,
+						"buffer_size": 1050,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								163,
-								163
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"auto_complete_triggers":
-							[
-								{
-									"characters": ".",
-									"selector": "source.python - string - comment - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								}
-							],
 							"syntax": "Packages/Python/Python.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
@@ -303,51 +290,6 @@
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "ts_feature_extractor.py",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1200,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								693,
-								693
-							]
-						],
-						"settings":
-						{
-							"auto_complete_triggers":
-							[
-								{
-									"characters": ".",
-									"selector": "source.python - string - comment - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								},
-								{
-									"characters": ".",
-									"selector": "source.python - string - constant.numeric"
-								}
-							],
-							"syntax": "Packages/Python/Python.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
 					"type": "text"
 				}
 			]
