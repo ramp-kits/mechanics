@@ -2,6 +2,7 @@ scipy==1.1.0
 numpy==1.14.5
 jupyter==1.0.0
 pandas==0.23.3
+xarray==0.10.8
 mahotas==1.4.4
 scikit-image==0.14.0
 scikit-learn==0.19.2
