@@ -2,6 +2,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline
 from sklearn.base import BaseEstimator
+import numpy as np
 
 
 class Classifier(BaseEstimator):
@@ -15,6 +16,8 @@ class Classifier(BaseEstimator):
         ])
 
     def fit(self, X, y):
+        print("classifier fit available classes : ", np.unique(y))
+
         self.clf.fit(X, y)
 
     def predict(self, X):

@@ -33,8 +33,8 @@ Predictions_2 = rw.prediction_types.make_regression(
 Predictions = rw.prediction_types.make_combined([Predictions_1, Predictions_2])
 
 # The workflow object, named after the RAMP.
-workflow = rw.workflows.Mechanics()
-# workflow = rw.workflows.DrugSpectra()
+# workflow = rw.workflows.Mechanics()
+workflow = rw.workflows.DrugSpectra()
 
 
 # The first score will be applied on the first Predictions
@@ -60,11 +60,22 @@ score_types = [
 
 # CV implemented here:
 def get_cv(X, y):
-    n = len(y)
-    train_is = np.arange(0, int(n / 2))
-    test_is = np.arange(int(n / 2), n)
-#    train_is = np.arange(0, int(n / 1))
-#    test_is = np.arange(0, int(n / 1))
+    # make sure it always has all classes
+    train_is = np.array([], dtype=int)
+    test_is = np.array([], dtype=int)
+
+    for label in _prediction_label_names:
+        y_class = np.where(y[:, 0] == label)[0]
+        print(y_class)
+        np.random.shuffle(y_class)
+        n = len(y_class)
+        train_is = np.append(train_is, y_class[:int(n / 2)], axis=0)
+        test_is = np.append(test_is, y_class[int(n / 2):], axis=0)
+
+    np.random.shuffle(train_is)
+    np.random.shuffle(test_is)
+    print("training indices : ", train_is)
+    print("test indices : ", test_is)
     yield (train_is, test_is)
 
 
@@ -102,8 +113,7 @@ def _read_data(path, filename):
     print("y_array : ", y_array.shape, " : ", y_array)
     return data_df, y_array
 
-n_sample = 10
-
+n_sample = 50
 
 def get_train_data(path='.'):
     data_df, y_array = _read_data(

@@ -36,7 +36,7 @@ def prepare_data():
                                  # "FG0", "FG1", "FG5",
                                  # "FGM0", "FGM1", "FGM5"
                                  ]):
-        for planet in range(1, 3):
+        for planet in [1]:
             filename = "data/phis_sys" + \
                 sys + \
                 "_planet" + \
@@ -52,6 +52,7 @@ def prepare_data():
 
 
 def prepare_data_ts(input_df):
+    n = 200
     data_array = input_df['phi'].values[0:-
                                         _n_burn_in -
                                         _n_lookahead:].reshape(-1, 1)
@@ -61,13 +62,24 @@ def prepare_data_ts(input_df):
     y_clf_array = input_df['system'].values[
         : -_n_burn_in - _n_lookahead].reshape(-1, 1)
 
-    # Hack for quick testing
-    y_clf_array = np.tile(['A', 'B', 'C', 'D'], int(
-        len(y_reg_array) / 4)).reshape(-1, 1)
+    ts_df = make_time_series(data_array)
+    ts_df['future'] = y_reg_array
+    ts_df['system'] = y_clf_array
 
-    data_df = make_time_series(data_array)
-    data_df['future'] = y_reg_array
-    data_df['system'] = y_clf_array
+    indices = np.unique(
+        np.random.randint(len(ts_df.index), size=n))
+    print("indices are : ")
+    print(indices)
+
+    np.random.shuffle(indices)
+    print("shuffled indices are : ")
+    print(indices)
+
+    data_df = ts_df.loc[indices]
+
+    print("available systems : ")
+    print(data_df.system.unique())
+
     data_df.to_csv('data_ts_merged.csv', index=False)
     return data_df
 

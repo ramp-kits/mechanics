@@ -1,15 +1,102 @@
 import numpy as np
-from submissions.tf_circle_fit.quick_features import *
-from submissions.tf_circle_fit.ptolemian_model import Ptolemy
 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.decomposition import PCA
 from sklearn.pipeline import Pipeline
 
+import tensorflow as tf
+import tensorflow.contrib.eager as tfe
+
 label_names = np.array(['A', 'B', 'C', 'D'])
 
 _n_lookahead = 50.
 _n_burn_in = 500
+
+tf.enable_eager_execution()
+
+
+def find_local_extrema(x):
+    n = 3
+    maxima = np.array([])
+    minima = np.array([])
+    loops = np.array([])
+
+    p_prev = np.zeros(n)
+    d_prev = np.zeros(n)
+    c_prev = np.zeros(n)
+
+    for i, p in enumerate(x):
+        d = p - p_prev[0]
+        if(d < - np.pi):
+            loops = np.append(loops, i)
+            d = d + 2. * np.pi
+
+        if(d > np.pi):
+            d = d - 2. * np.pi
+        c = d - d_prev[0]
+
+        if((d * d_prev[0]) < 0):
+            if(c < 0):
+                maxima = np.append(maxima, i)
+            else:
+                minima = np.append(minima, i)
+
+        p_prev = np.append(p, p_prev[:n])
+        d_prev = np.append(d, d_prev[:n])
+        c_prev = np.append(c, c_prev[:n])
+#    print(loops)
+    return maxima, minima, loops
+
+
+class Ptolemy(object):
+    def __init__(self, n_epi=2):
+        # The variables
+        self.order = np.ones(shape=(n_epi * 3, ))
+        self.mask = np.zeros(shape=(n_epi * 3, ))
+        self.c = tfe.Variable(
+            tf.random_normal(shape=(1, n_epi * 3),
+                             mean=self.order,
+                             stddev=self.order),
+            dtype=tf.float32)
+        self.unit = np.ones(shape=(n_epi * 3,))
+
+    def freeze_parameters(self,
+                          mask=np.array([1, 1, 1,
+                                         0, 0, 1])):
+        self.mask = mask
+
+    def assign_parameters(self,
+                          pars=np.array([1., 0.28284271, 3.14159265,
+                                         2., 0.28284271, 0.])):
+        print("pars : ", pars)
+        self.c.assign(self.c * (self.unit - self.mask) +
+                      pars * self.mask)
+
+    def __call__(self, times):
+        # The formula
+        x = tf.matmul(self.c[:, 0::3],
+                      tf.cos(tf.matmul(a=self.c[:, 1::3],
+                                       b=[times], transpose_a=True) +
+                             tf.transpose(self.c[:, 2::3])))
+        y = tf.matmul(self.c[:, 0::3],
+                      tf.sin(tf.matmul(a=self.c[:, 1::3],
+                                       b=[times], transpose_a=True) +
+                             tf.transpose(self.c[:, 2::3])))
+        phi = tf.atan2(y, x)
+        return phi
+
+    def loss(self, predicted_y, desired_y):
+        difference = tf.reduce_mean(tf.square(predicted_y - desired_y))
+        l1_penalty = tf.multiply(0.1, tf.reduce_sum(tf.abs(self.c[:, 0::3])))
+        return difference + l1_penalty
+
+    def train(self, inputs, outputs, rate):
+        with tf.GradientTape() as t:
+            current_loss = self.loss(self(inputs), outputs)
+        d = t.gradient(current_loss,
+                       self.c)
+        d -= d * self.mask
+        self.assign_parameters(self.c - d * rate)
 
 
 class FeatureExtractor(object):
@@ -50,8 +137,6 @@ class FeatureExtractor(object):
 
         self.c = np.array([])
         self.params = [0]
-        X_model = np.zeros(n, dtype=int)
-        X_model = X_system
 
         X_feat = np.ndarray(shape=(n, self.n_feat))
         for i in range(n):
@@ -64,15 +149,6 @@ class FeatureExtractor(object):
         for i in range(n):
             self.y_all = X_phis[i, :]
             self.y_to_fit = self.y_all
-
-            # print("y_all : ", self.y_all)
-            if(False):
-                nc, cc = qualitative_features(self.y_all)
-                self.window = 4 * int(2. * np.pi / cc[1])
-                self.c = cc
-                self.fit_length = X_phis.shape[1]
-                self.y_to_fit = X_phis[i, -self.fit_length:]
-
             model = self.models[np.argmax(X_system[i])]
             if(self.really_fit):
                 epochs = range(100)
