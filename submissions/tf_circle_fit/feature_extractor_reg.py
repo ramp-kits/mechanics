@@ -47,6 +47,7 @@ def find_local_extrema(x):
 #    print(loops)
     return maxima, minima, loops
 
+
 def qualitative_features(x):
     "Fitting features..."
     a = np.array([1., 1.])

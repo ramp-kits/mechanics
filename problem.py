@@ -54,7 +54,7 @@ score_types = [
     rw.score_types.MakeCombined(score_type=score_type_2, index=1),
     rw.score_types.Combined(
         name='combined', score_types=[score_type_1, score_type_2],
-        weights=[2. / 3, 1. / 3], precision=3),
+        weights=[0.1, 0.9], precision=3),
 ]
 
 
