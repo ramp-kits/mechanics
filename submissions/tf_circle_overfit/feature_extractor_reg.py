@@ -106,8 +106,6 @@ class FeatureExtractor(object):
         self.params = [0]
 
         for i in range(n):
-            self.y_all = X_phis[i, :]
-            self.y_to_fit = self.y_all
             model = self.models[np.argmax(X_system[i])]
 
             self.fit_length = X_phis.shape[1]
