@@ -76,24 +76,6 @@ def get_cv(X, y):
     yield (train_is, test_is)
 
 
-def make_time_series(X_ds, window=_n_burn_in):
-    X_array = X_ds['phi'].values.reshape(-1, 1)
-    X_ts = np.ndarray(shape=(len(X_array), 0))
-
-    for shift in np.arange(0, _n_burn_in):
-        #            print("Preparing series: ", shift)
-        X_ts = np.concatenate((
-            X_ts,
-            np.roll(X_array, -shift, axis=0)
-        ),
-            axis=1)
-    # This is the range for which features should be provided. Strip
-    # the burn-in from the beginning.
-
-    X_ts = X_ts[:, -window:]
-    return pd.DataFrame(X_ts)
-
-
 # Both train and test targets are stripped off the first
 # n_burn_in entries
 def _read_data(path, filename):

@@ -1,4 +1,6 @@
 
+notebook
+notebook_gradient.ipynb
 
 *.csv
 */*/*.sublime-*
