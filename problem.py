@@ -42,7 +42,8 @@ score_type_1 = rw.score_types.ClassificationError(name='err', precision=3)
 # The second score will be applied on the second Predictions
 
 # Why RMS doesn't work??
-score_type_2 = rw.score_types.RMSE(name='rmse', precision=3)
+score_type_2 = rw.score_types.RMSE(name='rmse', precision=3,
+                                   periodicity=2 * np.pi)
 # score_type_2 = rw.score_types.MARE(name='mare', precision=3)
 
 score_types = [
@@ -88,7 +89,9 @@ def _read_data(path, filename):
                               y_reg_array), axis=1)
     return data_df, y_array
 
-n_sample = 50
+
+n_sample = -1
+
 
 def get_train_data(path='.'):
     data_df, y_array = _read_data(
