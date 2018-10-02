@@ -1,3 +1,17 @@
+
+paper
+notebook
+
+
+*-project
+*-workspace
+
+*/*/*-project
+*/*/*-workspace
+
+*.png
+*.csv
+
 *.pyc
 *.profile
 
