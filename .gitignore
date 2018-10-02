@@ -7,12 +7,10 @@
 */*/*-workspace
 
 *.png
-*.csv
 
 notebook
 notebook_gradient.ipynb
 
-*.csv
 */*/*.sublime-*
 *.pyc
 *.profile
@@ -30,9 +28,6 @@ tags
 .coverage
 build/
 dist/
-
-
-data/*
 
 
 .nfs*
