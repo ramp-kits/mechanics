@@ -41,8 +41,7 @@ score_type_1 = rw.score_types.ClassificationError(name='err', precision=3)
 # The second score will be applied on the second Predictions
 
 # Why RMS doesn't work??
-score_type_2 = rw.score_types.RMSE(name='rmse', precision=3,
-                                   periodicity=2 * np.pi)
+score_type_2 = rw.score_types.RMSE(name='rmse', precision=3)
 # score_type_2 = rw.score_types.CyclicRMSE(name='cyclic_rmse', precision=3,
 #                                          periodicity=2 * np.pi)
 
