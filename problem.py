@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 import rampwf as rw
-
+from rampwf.score_types.base import BaseScoreType
 
 problem_title = \
     'Mechanics classification'
@@ -40,10 +40,27 @@ workflow = rw.workflows.DrugSpectra()
 score_type_1 = rw.score_types.ClassificationError(name='err', precision=3)
 # The second score will be applied on the second Predictions
 
-# Why RMS doesn't work??
-score_type_2 = rw.score_types.RMSE(name='rmse', precision=3)
-# score_type_2 = rw.score_types.CyclicRMSE(name='cyclic_rmse', precision=3,
-#                                          periodicity=2 * np.pi)
+
+class CyclicRMSE(BaseScoreType):
+    is_lower_the_better = True
+    minimum = 0.0
+    maximum = float('inf')
+
+    def __init__(self, name='rmse', precision=2, periodicity=-1):
+        self.name = name
+        self.precision = precision
+        self.periodicity = -1
+
+    def __call__(self, y_true, y_pred):
+        d = y_true - y_pred
+        if(self.periodicity > 0):
+            d = min(np.mod(d, self.periodicity),
+                    np.mod(-d, self.periodicity))
+        return np.sqrt(np.mean(np.square(d)))
+
+
+score_type_2 = CyclicRMSE(name='rmse', precision=3,
+                          periodicity=2 * np.pi)
 
 score_types = [
     # The official score combines the two scores with weights 2/3 and 1/3.

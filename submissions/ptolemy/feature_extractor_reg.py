@@ -90,6 +90,6 @@ class FeatureExtractor(object):
                                    'maxiter': 100000})
                 self.c = res.x
             X[i][0] = f_phi(*(decode_parameters(self.c)),
-                            [_n_burn_in + _n_lookahead])
+                            t=[_n_burn_in + _n_lookahead])
 
         return X
