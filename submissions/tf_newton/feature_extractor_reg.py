@@ -158,27 +158,13 @@ class FeatureExtractor(object):
 
             self.fit_length = X_phis.shape[1]
             self.y_to_fit = X_phis[i, -self.fit_length:]
-            # epochs = range(100)
-            # for epoch in epochs:
-                # cs = np.append(cs, self.model.c.numpy(), axis=0)
 
-            # times = np.arange(0., len(self.y_to_fit))
             n_steps = _n_burn_in + _n_lookahead
-                # model_result = model(times)
-                # print("model result : ", model_result)
-                # current_loss = model.loss(model_result, self.y_to_fit)
 
-                # cannot train at the moment
+            # cannot train at the moment
             model.train(n_steps, self.y_to_fit, rate=0.01)
 
-                # print('Model : %d Epoch %2d: w=%s loss=%2.5f' %
-                #      (X_model[i], epoch,
-                #       str(model.c.numpy()),
-                #       current_loss))
             self.c = model.c.numpy()
 
             X[i][0] = model(n_steps)[-1]
-            # X[i][1] = X_model[i]
-            # for p in range(len(model.c.numpy()[0])):
-            #    X[i][p + 2] = model.c.numpy()[0][p]
         return X

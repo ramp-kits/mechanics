@@ -2,7 +2,6 @@ import os
 import numpy as np
 import pandas as pd
 import rampwf as rw
-import xarray as xr
 
 
 problem_title = \
@@ -44,7 +43,8 @@ score_type_1 = rw.score_types.ClassificationError(name='err', precision=3)
 # Why RMS doesn't work??
 score_type_2 = rw.score_types.RMSE(name='rmse', precision=3,
                                    periodicity=2 * np.pi)
-# score_type_2 = rw.score_types.MARE(name='mare', precision=3)
+# score_type_2 = rw.score_types.CyclicRMSE(name='cyclic_rmse', precision=3,
+#                                          periodicity=2 * np.pi)
 
 score_types = [
     # The official score combines the two scores with weights 2/3 and 1/3.

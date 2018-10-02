@@ -13,4 +13,3 @@ class Regressor(BaseEstimator):
 
     def predict(self, X):
         return X[:, 0].reshape(-1, 1)
-

@@ -63,7 +63,6 @@ class FeatureExtractor(object):
         # transoformed to be represented by a formula
         # with optimized parameters
 
-        X_system = X_df.values[:, -4:]
         X_phis = X_df.values[:, 0: -4]
 
         self.c = np.array([])
@@ -75,7 +74,6 @@ class FeatureExtractor(object):
 #            cc = fit_features(self.y_to_fit)
             cc = np.ones(3 * self.n_epicyle)
             if(self.really_fit):
-             #               c_ind = cc[1:]
                 a_bnds = (0., 2.)
                 w_bnds = (0.001, 0.5)
                 p_bnds = (0., np.pi)
@@ -90,7 +88,6 @@ class FeatureExtractor(object):
                                    # 'xtol': 0.001,
                                    # 'eps': 0.02,
                                    'maxiter': 100000})
- #               self.c = np.append([1.], res.x)
                 self.c = res.x
             X[i][0] = f_phi(*(decode_parameters(self.c)),
                             [_n_burn_in + _n_lookahead])
