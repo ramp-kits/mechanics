@@ -1,6 +1,16 @@
 
 
-*.csv
+*-project
+*-workspace
+
+*/*/*-project
+*/*/*-workspace
+
+*.png
+
+notebook
+notebook_gradient.ipynb
+
 */*/*.sublime-*
 *.pyc
 *.profile
@@ -18,9 +28,6 @@ tags
 .coverage
 build/
 dist/
-
-
-data/*
 
 
 .nfs*

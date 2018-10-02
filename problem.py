@@ -2,8 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 import rampwf as rw
-import xarray as xr
-
+from rampwf.score_types.base import BaseScoreType
 
 problem_title = \
     'Mechanics classification'
@@ -41,9 +40,27 @@ workflow = rw.workflows.DrugSpectra()
 score_type_1 = rw.score_types.ClassificationError(name='err', precision=3)
 # The second score will be applied on the second Predictions
 
-# Why RMS doesn't work??
-score_type_2 = rw.score_types.RMSE(name='rmse', precision=3)
-# score_type_2 = rw.score_types.MARE(name='mare', precision=3)
+
+class CyclicRMSE(BaseScoreType):
+    is_lower_the_better = True
+    minimum = 0.0
+    maximum = float('inf')
+
+    def __init__(self, name='rmse', precision=2, periodicity=-1):
+        self.name = name
+        self.precision = precision
+        self.periodicity = -1
+
+    def __call__(self, y_true, y_pred):
+        d = y_true - y_pred
+        if(self.periodicity > 0):
+            d = min(np.mod(d, self.periodicity),
+                    np.mod(-d, self.periodicity))
+        return np.sqrt(np.mean(np.square(d)))
+
+
+score_type_2 = CyclicRMSE(name='rmse', precision=3,
+                          periodicity=2 * np.pi)
 
 score_types = [
     # The official score combines the two scores with weights 2/3 and 1/3.
@@ -54,7 +71,7 @@ score_types = [
     rw.score_types.MakeCombined(score_type=score_type_2, index=1),
     rw.score_types.Combined(
         name='combined', score_types=[score_type_1, score_type_2],
-        weights=[2. / 3, 1. / 3], precision=3),
+        weights=[0.1, 0.9], precision=3),
 ]
 
 
@@ -76,24 +93,6 @@ def get_cv(X, y):
     yield (train_is, test_is)
 
 
-def make_time_series(X_ds, window=_n_burn_in):
-    X_array = X_ds['phi'].values.reshape(-1, 1)
-    X_ts = np.ndarray(shape=(len(X_array), 0))
-
-    for shift in np.arange(0, _n_burn_in):
-        #            print("Preparing series: ", shift)
-        X_ts = np.concatenate((
-            X_ts,
-            np.roll(X_array, -shift, axis=0)
-        ),
-            axis=1)
-    # This is the range for which features should be provided. Strip
-    # the burn-in from the beginning.
-
-    X_ts = X_ts[:, -window:]
-    return pd.DataFrame(X_ts)
-
-
 # Both train and test targets are stripped off the first
 # n_burn_in entries
 def _read_data(path, filename):
@@ -106,7 +105,9 @@ def _read_data(path, filename):
                               y_reg_array), axis=1)
     return data_df, y_array
 
-n_sample = 50
+
+n_sample = -1
+
 
 def get_train_data(path='.'):
     data_df, y_array = _read_data(
