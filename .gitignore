@@ -1,7 +1,4 @@
 
-paper
-notebook
-
 
 *-project
 *-workspace
@@ -12,6 +9,11 @@ notebook
 *.png
 *.csv
 
+notebook
+notebook_gradient.ipynb
+
+*.csv
+*/*/*.sublime-*
 *.pyc
 *.profile
 
@@ -29,10 +31,14 @@ tags
 build/
 dist/
 
+
 data/*
+
 
 .nfs*
 *.dat
 *starting_kit.html
 *~
 run.sh
+
+paper
