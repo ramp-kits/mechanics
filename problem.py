@@ -7,9 +7,8 @@ from rampwf.score_types.base import BaseScoreType
 problem_title = \
     'Mechanics classification'
 
-_n_lookahead = 100
-_n_burn_in = 20
-_filename = 'data_ts_merged.csv'
+
+_filename = 'test_1_phi_0.csv'
 # Need better error messages for invalid input parameters
 _debug_time_series = False
 

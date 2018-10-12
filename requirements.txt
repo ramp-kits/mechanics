@@ -10,5 +10,6 @@ keras==2.2.0
 h5py==2.8.0
 tensorflow==1.8
 matplotlib==2.2.2
+cma
 https://api.github.com/repos/paris-saclay-cds/ramp-workflow/zipball/master
 git+https://github.com/paris-saclay-cds/ssd_keras
