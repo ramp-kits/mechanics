@@ -24,7 +24,8 @@ class Regressor(BaseEstimator):
 
     def fit(self, X, y):
         for i, mod in enumerate(self.list_model):
-            ind_mod = np.where(np.argmax(X[:, -len(self.list_model):], axis=1) == i)[0]
+            ind_mod = np.where(np.argmax(X[:, -len(self.list_model):],
+                                         axis=1) == i)[0]
             X_mod = X[ind_mod, 0: -len(self.list_model)]
             y_mod = y[ind_mod]
             if(len(y_mod) > 0):
@@ -33,7 +34,8 @@ class Regressor(BaseEstimator):
     def predict(self, X):
         y_pred = np.zeros(X.shape[0])
         for i, mod in enumerate(self.list_model):
-            ind_mod = np.where(np.argmax(X[:, -len(self.list_model):], axis=1) == i)[0]
+            ind_mod = np.where(np.argmax(X[:, -len(self.list_model):],
+                                         axis=1) == i)[0]
             X_mod = X[ind_mod, 0: -len(self.list_model)]
             if(len(X_mod) > 0):
                 y_pred[ind_mod] = self.dict_reg[mod].predict(X_mod)
