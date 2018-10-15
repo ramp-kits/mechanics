@@ -8,8 +8,8 @@ problem_title = \
     'Mechanics classification'
 
 
-_train = 'public_train.csv'
-_test = 'public_test.csv'
+_train = 'train.csv'
+_test = 'test.csv'
 
 # Need better error messages for invalid input parameters
 _debug_time_series = False
