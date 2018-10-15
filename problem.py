@@ -8,12 +8,12 @@ problem_title = \
     'Mechanics classification'
 
 
-_filename = 'test_1_phi_0.csv'
+_filename = 'test_cv_0_seed_0_phi.csv'
 # Need better error messages for invalid input parameters
 _debug_time_series = False
 
 # label names for the classification target
-_prediction_label_names = ['A', 'B', 'C', 'D']
+_prediction_label_names = ['A', 'B', 'C', 'D', 'E', 'F']
 # the regression target column
 _target_column_name_clf = 'system'
 # the classification target column
