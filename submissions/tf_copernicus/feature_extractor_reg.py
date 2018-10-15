@@ -7,7 +7,7 @@ from sklearn.pipeline import Pipeline
 import tensorflow as tf
 import tensorflow.contrib.eager as tfe
 
-label_names = np.array(['A', 'B', 'C', 'D'])
+label_names = np.array(['A', 'B', 'C', 'D', 'E'])
 
 _n_lookahead = 50.
 _n_burn_in = 500

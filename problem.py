@@ -8,12 +8,14 @@ problem_title = \
     'Mechanics classification'
 
 
-_filename = 'test_cv_0_seed_0_phi.csv'
+_train = 'public_train.csv'
+_test = 'public_test.csv'
+
 # Need better error messages for invalid input parameters
 _debug_time_series = False
 
 # label names for the classification target
-_prediction_label_names = ['A', 'B', 'C', 'D', 'E', 'F']
+_prediction_label_names = ['A', 'B', 'C', 'D', 'E']
 # the regression target column
 _target_column_name_clf = 'system'
 # the classification target column
@@ -75,21 +77,14 @@ score_types = [
 
 
 # CV implemented here:
+
 def get_cv(X, y):
-    # make sure it always has all classes
-    train_is = np.array([], dtype=int)
-    test_is = np.array([], dtype=int)
-
-    for label in _prediction_label_names:
-        y_class = np.where(y[:, 0] == label)[0]
-        np.random.shuffle(y_class)
-        n = len(y_class)
-        train_is = np.append(train_is, y_class[:int(n / 2)], axis=0)
-        test_is = np.append(test_is, y_class[int(n / 2):], axis=0)
-
-    np.random.shuffle(train_is)
-    np.random.shuffle(test_is)
-    yield (train_is, test_is)
+    unique_replicates = np.unique(X['distribution'])
+    r = np.arange(len(X))
+    for replicate in unique_replicates:
+        train_is = r[(X['distribution'] != replicate).values]
+        test_is = r[(X['distribution'] == replicate).values]
+        yield train_is, test_is
 
 
 # Both train and test targets are stripped off the first
@@ -105,22 +100,9 @@ def _read_data(path, filename):
     return data_df, y_array
 
 
-n_sample = -1
-
-
 def get_train_data(path='.'):
-    data_df, y_array = _read_data(
-        path,
-        _filename)
-    # return data_ds[:n_sample], y_array[:n_sample]
-    #    "phis_sysFSS0_planet1_nview100_nsim200000.csv"
-    return data_df[:n_sample], y_array[:n_sample]
+    return _read_data(path, _train)
 
 
 def get_test_data(path='.'):
-    data_df, y_array = _read_data(
-        path,
-        _filename)
-    # return data_ds[:n_sample], y_array[:n_sample]
-    #    "phis_sysFSS0_planet1_nview100_nsim200000.csv")
-    return data_df[:n_sample], y_array[:n_sample]
+    return _read_data(path, _test)

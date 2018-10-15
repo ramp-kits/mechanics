@@ -19,10 +19,8 @@ class Classifier(BaseEstimator):
 
     def predict(self, X):
         y_pred = self.clf.predict(X)
-        print("y_pred clf : ", y_pred)
         return y_pred
 
     def predict_proba(self, X):
         y_pred_proba = self.clf.predict_proba(X)
-        print("y_pred_proba clf : ", y_pred_proba)
         return y_pred_proba
