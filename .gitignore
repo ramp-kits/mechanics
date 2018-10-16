@@ -19,6 +19,7 @@ notebook_gradient.ipynb
 .cache
 *__pycache__
 
+
 .ipynb_checkpoints
 
 tags

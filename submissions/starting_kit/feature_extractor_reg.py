@@ -1,8 +1,3 @@
-import numpy as np
-
-label_names = np.array(['A', 'B', 'C', 'D'])
-
-
 class FeatureExtractor():
     def __init__(self):
         pass

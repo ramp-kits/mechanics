@@ -2,7 +2,7 @@ import numpy as np
 
 from scipy.optimize import minimize
 
-label_names = np.array(['A', 'B', 'C', 'D'])
+label_names = np.array(['A', 'B', 'C', 'D', 'E'])
 
 _n_lookahead = 50.
 _n_burn_in = 500
