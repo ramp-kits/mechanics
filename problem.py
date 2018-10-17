@@ -68,11 +68,11 @@ score_types = [
     # To let the score type know that it should be applied on the first
     # Predictions of the combined Predictions' prediction_list, we wrap
     # it into a special MakeCombined score with index 0
-    rw.score_types.MakeCombined(score_type=score_type_1, index=0),
-    rw.score_types.MakeCombined(score_type=score_type_2, index=1),
     rw.score_types.Combined(
         name='combined', score_types=[score_type_1, score_type_2],
         weights=[0.1, 0.9], precision=3),
+    rw.score_types.MakeCombined(score_type=score_type_1, index=0),
+    rw.score_types.MakeCombined(score_type=score_type_2, index=1),
 ]
 
 
