@@ -7,9 +7,9 @@ try:
 except ImportError:
     from urllib import urlretrieve
 
-URLBASE = 'https://storage.ramp.studio/mechanics/{}'
+URLBASE = 'https://storage.ramp.studio/mechanics/public_{}'
 DATA = [
-    'public_train.csv', 'public_test.csv']
+    'train.csv', 'test.csv']
 
 
 def main(output_dir='data'):
