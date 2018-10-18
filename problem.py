@@ -4,6 +4,68 @@ import pandas as pd
 import rampwf as rw
 from rampwf.score_types.base import BaseScoreType
 
+
+class Mechanics(object):
+    def __init__(self, workflow_element_names=[
+            'feature_extractor', 'classifier', 'regressor']):
+        self.element_names = workflow_element_names
+        self.feature_extractor_classifier_workflow =\
+            rw.workflows.FeatureExtractorClassifier(
+                workflow_element_names=['feature_extractor', 'classifier'])
+        self.feature_extractor_regressor_workflow =\
+            rw.workflows.FeatureExtractorRegressor(
+                workflow_element_names=['feature_extractor', 'regressor'])
+        self.feature_extractor_workflow = rw.workflows.FeatureExtractor(
+            [self.element_names[0]])
+        self.classifier_workflow = rw.workflows.Classifier(
+            [self.element_names[1]])
+        self.regressor_workflow = rw.workflows.Regressor(
+            [self.element_names[2]])
+
+    def train_submission(self, module_path, X_df, y_array, train_is=None):
+        if train_is is None:
+            train_is = slice(None, None, None)
+        # Avoid setting with copy warning
+        X_train_df = X_df.iloc[train_is].copy()
+        y_train_array = y_array[train_is]
+        fe = self.feature_extractor_workflow.train_submission(
+            module_path, X_train_df, y_train_array)
+        X_train_array = self.feature_extractor_workflow.test_submission(
+            fe, X_train_df)
+        y_train_clf_array = y_train_array[:, 0]
+        clf = self.classifier_workflow.train_submission(
+            module_path, X_train_array, y_train_clf_array)
+        y_train_reg_array = y_train_array[:, 1].astype(float)
+        # Concatenating ground truth y_proba (one-hot, derived from labels)
+        # to X_train_df.
+        # This makes it vulnerable to training sets that don't contain
+        # all the classes. So better to use it with stratified CV.
+        labels = np.unique(y_array[:, 0])
+        label_array = np.zeros((len(y_train_clf_array), len(labels)))
+        for i, label in enumerate(labels):
+            label_array[:, i] = (y_train_clf_array == label)
+        X_train_array = np.hstack([X_train_array, label_array])
+        reg = self.regressor_workflow.train_submission(
+            module_path, X_train_array, y_train_reg_array)
+        # It's a bit ugly that we return the labels here, but I don't see
+        # a better solution
+        return labels, fe, clf, reg
+
+    def test_submission(self, trained_model, X_df):
+        labels, fe, clf, reg = trained_model
+        X_test_array = self.feature_extractor_workflow.test_submission(
+            fe, X_df)
+        y_proba_clf = self.classifier_workflow.test_submission(
+            clf, X_test_array)
+        label_array = np.zeros((len(y_proba_clf), len(labels)))
+        for i, label in enumerate(labels):
+            label_array[:, i] = y_proba_clf[:, i]
+        X_test_array = np.hstack([X_test_array, label_array])
+        y_pred_reg = self.regressor_workflow.\
+            test_submission(reg, X_test_array)
+        return np.concatenate([y_proba_clf, y_pred_reg.reshape(-1, 1)], axis=1)
+
+
 problem_title = \
     'Mechanics classification'
 
@@ -34,7 +96,7 @@ Predictions = rw.prediction_types.make_combined([Predictions_1, Predictions_2])
 
 # The workflow object, named after the RAMP.
 # workflow = rw.workflows.Mechanics()
-workflow = rw.workflows.DrugSpectra()
+workflow = Mechanics()
 
 
 # The first score will be applied on the first Predictions
