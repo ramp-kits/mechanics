@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class FeatureExtractor():
     def __init__(self):
         pass
@@ -6,5 +9,7 @@ class FeatureExtractor():
         pass
 
     def transform(self, X_df):
-        X_array = X_df.values
-        return X_array
+        X_array = X_df.values[:, :-1]
+        means = np.mean(X_array, axis=1)
+        stds = np.std(X_array, axis=1)
+        return np.array([means, stds]).T
