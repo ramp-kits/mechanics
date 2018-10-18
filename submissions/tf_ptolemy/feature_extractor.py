@@ -6,13 +6,19 @@ from sklearn.pipeline import Pipeline
 
 import tensorflow as tf
 import tensorflow.contrib.eager as tfe
+import pdb
 
-label_names = np.array(['A', 'B', 'C', 'D'])
+
+model_labels = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4}
 
 _n_lookahead = 50.
 _n_burn_in = 500
 
-tf.enable_eager_execution()
+
+try:
+    tf.enable_eager_execution()
+except ValueError:
+    pass
 
 
 class Ptolemy(object):
@@ -69,7 +75,16 @@ class Ptolemy(object):
 class FeatureExtractor(object):
 
     def __init__(self):
-        self.n_feat = 6
+        self.n_models = 5
+        self.n_components = 10
+        self.n_estimators = 10
+        self.clf = Pipeline([
+            ('pca', PCA(n_components=self.n_components)),
+            ('clf', RandomForestClassifier(
+                n_estimators=self.n_estimators, random_state=42))
+        ])
+
+        self.n_feat = 5
         self.params = np.array([])
         self.window = 0
         self.really_fit = True
@@ -89,44 +104,41 @@ class FeatureExtractor(object):
         ])
 
     def fit(self, X_df, y):
-        pass
+        X_phis = X_df.values[:, 0: 200]
+        y_model = y[:, 0]
+        self.clf.fit(X_phis, y_model)
 
     def transform(self, X_df):
         n = X_df.shape[0]
-        X = np.zeros(shape=(n, 1))
+        X = np.zeros(shape=(n, 7), dtype=object)
 
         # This is where each time series is
-        # transoformed to be represented by a formula
+        # transformed to be represented by a formula
         # with optimized parameters
-
-        X_system = X_df.values[:, -4:]
-        X_phis = X_df.values[:, 0: -4]
+        X_phis = X_df.values[:, 0: 200]
 
         self.c = np.array([])
         self.params = [0]
 
+        predicted_model = self.clf.predict(X_phis)
+        predicted_prob = self.clf.predict_proba(X_phis)
         for i in range(n):
-            model = self.models[np.argmax(X_system[i])]
+            model = self.models[model_labels[predicted_model[i]]]
 
             self.fit_length = X_phis.shape[1]
             self.y_to_fit = X_phis[i, -self.fit_length:]
             if(self.really_fit):
                 epochs = range(100)
                 for epoch in epochs:
-                    # cs = np.append(cs, self.model.c.numpy(), axis=0)
                     times = np.arange(0., len(self.y_to_fit))
-                    # model_result = model(times)
-                    # print("model result : ", model_result)
-                    # current_loss = model.loss(model_result, self.y_to_fit)
                     model.train(times, self.y_to_fit, rate=0.01)
-                    # print('Model : %d Epoch %2d: w=%s loss=%2.5f' %
-                    #      (X_model[i], epoch,
-                    #       str(model.c.numpy()),
-                    #       current_loss))
+
             self.c = model.c.numpy()
 
-            X[i][0] = model([_n_burn_in + _n_lookahead]).numpy()
-            # X[i][1] = X_model[i]
+            X[i, 0] = model([_n_burn_in + _n_lookahead]).numpy()
+            X[i, 1] = predicted_model[i]
+            X[i, 2:7] = predicted_prob[i, :]
+
             # for p in range(len(model.c.numpy()[0])):
             #    X[i][p + 2] = model.c.numpy()[0][p]
         return X
