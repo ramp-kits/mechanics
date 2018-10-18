@@ -9,4 +9,4 @@ class Regressor(BaseEstimator):
         pass
 
     def predict(self, X):
-        return X[:, 0].reshape(-1, 1)
+        return X[:, 0].reshape(-1, 1).astype(float)
