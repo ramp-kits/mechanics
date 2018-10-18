@@ -66,7 +66,10 @@ problem_title = \
 
 _train = 'train.csv'
 _test = 'test.csv'
-
+quick_mode = os.getenv('RAMP_TEST_MODE', 0)
+if(quick_mode):
+    _train = 'train_small.csv'
+    _test = 'test_small.csv'
 # Need better error messages for invalid input parameters
 _debug_time_series = False
 

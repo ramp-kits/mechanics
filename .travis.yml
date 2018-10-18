@@ -16,6 +16,9 @@ install:
     - pip install -r requirements.txt
 script:
     - flake8 *.py submissions/*/*.py
+    - ramp_test_submission --quick-test
+    - python download_data.py
     - ramp_test_submission
+
 notifications:
   email: true
