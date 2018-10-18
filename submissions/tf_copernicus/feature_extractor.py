@@ -7,7 +7,7 @@ from sklearn.pipeline import Pipeline
 import tensorflow as tf
 import tensorflow.contrib.eager as tfe
 
-label_names = np.array(['A', 'B', 'C', 'D', 'E'])
+model_labels = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4}
 
 _n_lookahead = 50.
 _n_burn_in = 500
@@ -143,12 +143,19 @@ class Ptolemy(object):
 class FeatureExtractor(object):
 
     def __init__(self):
-        self.n_feat = 6
+        self.n_models = 5
+        self.n_components = 10
+        self.n_estimators = 10
+        self.clf = Pipeline([
+            ('pca', PCA(n_components=self.n_components)),
+            ('clf', RandomForestClassifier(
+                n_estimators=self.n_estimators, random_state=42))
+        ])
         self.params = np.array([])
         self.window = 0
         self.really_fit = True
         self.models = []
-        n = 20
+        n = 2
         for i in range(5):
             self.models.append(Ptolemy(n))
             self.models[i].assign_parameters(
@@ -163,18 +170,19 @@ class FeatureExtractor(object):
         ])
 
     def fit(self, X_df, y):
-        pass
+        X_phis = X_df.values[:, 0: 200]
+        y_model = y[:, 0]
+        self.clf.fit(X_phis, y_model)
 
     def transform(self, X_df):
         n = X_df.shape[0]
-        X = np.zeros(shape=(n, 1))
+        X = np.zeros(shape=(n, 7), dtype=object)
 
         # This is where each time series is
         # transoformed to be represented by a formula
         # with optimized parameters
 
-        X_system = X_df.values[:, -4:]
-        X_phis = X_df.values[:, 0: -4]
+        X_phis = X_df.values[:, 0: 200]
 
         self.c = np.array([])
         self.params = [0]
@@ -187,10 +195,14 @@ class FeatureExtractor(object):
                 X_feat[i] = [len(maxima), len(minima), len(loops),
                              maxima[0], minima[0], loops[0]]
 
+        predicted_model = self.clf.predict(X_phis)
+        predicted_prob = self.clf.predict_proba(X_phis)
+
         for i in range(n):
             self.y_all = X_phis[i, :]
             self.y_to_fit = self.y_all
-            model = self.models[np.argmax(X_system[i])]
+
+            model = self.models[model_labels[predicted_model[i]]]
 
             nc, cc = qualitative_features(self.y_all)
             self.c = cc
@@ -210,7 +222,9 @@ class FeatureExtractor(object):
                     #       str(model.c.numpy()),
                     #       current_loss))
             self.c = model.c.numpy()
-            X[i][0] = model([_n_burn_in + _n_lookahead]).numpy()
+            X[i, 0] = model([_n_burn_in + _n_lookahead]).numpy()
+            X[i, 1] = predicted_model[i]
+            X[i, 2:7] = predicted_prob[i, :]
             # X[i][1] = X_model[i]
             # for p in range(len(model.c.numpy()[0])):
             #    X[i][p + 2] = model.c.numpy()[0][p]

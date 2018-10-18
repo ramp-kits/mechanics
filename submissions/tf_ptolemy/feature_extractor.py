@@ -6,7 +6,6 @@ from sklearn.pipeline import Pipeline
 
 import tensorflow as tf
 import tensorflow.contrib.eager as tfe
-import pdb
 
 
 model_labels = {'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4}
@@ -116,17 +115,16 @@ class FeatureExtractor(object):
         # transformed to be represented by a formula
         # with optimized parameters
         X_phis = X_df.values[:, 0: 200]
+        predicted_model = self.clf.predict(X_phis)
+        predicted_prob = self.clf.predict_proba(X_phis)
 
         self.c = np.array([])
         self.params = [0]
 
-        predicted_model = self.clf.predict(X_phis)
-        predicted_prob = self.clf.predict_proba(X_phis)
         for i in range(n):
             model = self.models[model_labels[predicted_model[i]]]
 
-            self.fit_length = X_phis.shape[1]
-            self.y_to_fit = X_phis[i, -self.fit_length:]
+            self.y_to_fit = X_phis[i, :]
             if(self.really_fit):
                 epochs = range(100)
                 for epoch in epochs:

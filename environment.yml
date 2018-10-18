@@ -3,19 +3,15 @@ channels:
   - conda-forge
   - pytorch
 dependencies:
-  - python=3.6
-  - scipy=1.1.0
-  - numpy=1.14.5
-  - pandas=0.23.3
-  - jupyter=1.0.0
-  - matplotlib=2.2.2
-  - scikit-learn=0.19.2
-  - scikit-image=0.14.0
-  - h5py=2.8.0
+  - python
+  - scipy
+  - numpy
+  - pandas
+  - jupyter
+  - matplotlib
+  - scikit-learn
   - keras=2.2.0
   - tensorflow=1.8
-  - mahotas=1.4.4
-  - xarray=0.10.7
 
   # PyTorch installation 
   # uncomment the following lines depending on your OS
