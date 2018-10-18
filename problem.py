@@ -9,12 +9,6 @@ class Mechanics(object):
     def __init__(self, workflow_element_names=[
             'feature_extractor', 'classifier', 'regressor']):
         self.element_names = workflow_element_names
-        self.feature_extractor_classifier_workflow =\
-            rw.workflows.FeatureExtractorClassifier(
-                workflow_element_names=['feature_extractor', 'classifier'])
-        self.feature_extractor_regressor_workflow =\
-            rw.workflows.FeatureExtractorRegressor(
-                workflow_element_names=['feature_extractor', 'regressor'])
         self.feature_extractor_workflow = rw.workflows.FeatureExtractor(
             [self.element_names[0]])
         self.classifier_workflow = rw.workflows.Classifier(
