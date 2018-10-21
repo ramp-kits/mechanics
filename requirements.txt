@@ -7,6 +7,7 @@ scikit-learn
 keras==2.2.0
 tensorflow==1.8
 matplotlib
+autograd
 cma
 https://api.github.com/repos/paris-saclay-cds/ramp-workflow/zipball/master
 git+https://github.com/paris-saclay-cds/ssd_keras
