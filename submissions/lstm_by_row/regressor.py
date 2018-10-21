@@ -39,22 +39,40 @@ class Regressor(BaseEstimator):
             phis = X_phis[i_row, :].reshape(-1)
             model = self.models[X_model[i_row]]
             model.set_weights(self.initial_weights[X_model[i_row]])
-            n_train = 100
-            n_time = 50
-            phi_short = np.ndarray(shape=(n_train, n_time, 1))
-            for i in range(0, n_train):
-                phi_short[i, :, 0] = phis[i:i + n_time] / np.pi
-            target = phis[n_time + 50:] / np.pi
-            model.fit(phi_short, target, epochs=8, batch_size=1, verbose=2)
 
-            x_pred = np.ndarray(shape=(250, n_time, 1))
-            for i in range(0, 150):
+            n_time = 10
+            target_future = 50
+            predict_future = 50
+            n_train = 10
+            sample_step = 5
+            n_steps = len(phis)
+
+            X_ts = np.ndarray(shape=(n_train, n_time, 1))
+
+            for i in range(0, n_train):
+                X_ts[i, :, 0] = \
+                    phis[i * sample_step:i * sample_step + n_time] / np.pi
+
+            target = phis[n_time + predict_future:
+                          n_train * sample_step + n_time + predict_future:
+                          sample_step] / np.pi
+            inputs = Input(shape=(n_time, 1), dtype='float', name='main_input')
+            layer = LSTM(12)(inputs)
+            predictions = Dense(1)(layer)
+            model = Model(inputs=inputs, outputs=predictions)
+            model.compile(optimizer='adam',
+                          loss='mean_squared_error')
+
+            model.fit(X_ts, target, epochs=3, batch_size=1, verbose=0)
+            x_pred = np.ndarray(shape=(n_steps + target_future, n_time, 1))
+            for i in range(0, n_steps - n_time):
                 x_pred[i, :, 0] = phis[i:i + n_time] / np.pi
 
-            for i in range(150, 250):
+            for i in range(n_steps - n_time, n_steps + target_future):
                 x_pred[i, :, 0] = model.predict(
-                    x_pred[i - n_time - 50].reshape(1, 50, 1))[0]
+                    x_pred[i - n_time - predict_future]
+                    .reshape(1, n_time, 1))[0]
 
-            y_pred[i_row] = x_pred[249, 0, 0] * np.pi
+            y_pred[i_row] = x_pred[-1, 0, 0] * np.pi
 
         return y_pred

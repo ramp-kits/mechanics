@@ -32,6 +32,6 @@ class Regressor(BaseEstimator):
         for i, model in enumerate(self.models):
             ind_mod = np.where(np.argmax(X[:, -len(self.models):],
                                          axis=1) == i)[0]
-            X_mod = X[ind_mod, :]
-            y_pred[ind_mod] = model.predict(X_mod)
+            X_mod = X[ind_mod, :self.n_sample].reshape(len(ind_mod), -1, 1)
+            y_pred[ind_mod] = model.predict(X_mod).reshape(-1)
         return y_pred
