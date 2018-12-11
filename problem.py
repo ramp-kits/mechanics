@@ -109,13 +109,14 @@ class CyclicRMSE(BaseScoreType):
     def __init__(self, name='rmse', precision=2, periodicity=-1):
         self.name = name
         self.precision = precision
-        self.periodicity = -1
+        self.periodicity = periodicity
 
     def __call__(self, y_true, y_pred):
         d = y_true - y_pred
         if(self.periodicity > 0):
-            d = min(np.mod(d, self.periodicity),
-                    np.mod(-d, self.periodicity))
+            for i, er in enumerate(d):
+                d[i] = min(np.mod(er, self.periodicity),
+                           np.mod(-er, self.periodicity))
         return np.sqrt(np.mean(np.square(d)))
 
 
